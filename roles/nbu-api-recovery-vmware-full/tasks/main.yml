@@ -1,0 +1,5 @@
+---
+# tasks file for nbu-api-restore-vmware-full
+
+- import_tasks: restore_vm.yml
+

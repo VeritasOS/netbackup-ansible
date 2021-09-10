@@ -1,0 +1,164 @@
+# This answer file template contains values that may be used for unattended/silent
+# installs and upgrades of master servers. To utilize this template, create a copy
+# at /tmp/NBInstallAnswer.conf and set environment-specific values for the required
+# options. The other options may be set or removed as needed.  Unused options
+# should be removed from the file.  Default values will be used for options that
+# are not present in the file.
+#
+# Host names that are provided for any these options must be resolvable.
+# It is best practice to use fully-qualified domain names.
+#
+# Please note that Cluster install/upgrade and Disaster Recovery installs are not
+# currently supported with this method.  Please continue to use the install script
+# for these scenarios.
+#
+# Do not attempt to change existing configuration settings via this file during
+# upgrades.  Attempting to do so may result in ignored specifications or failed
+# upgrades.
+#
+# The primary use of this file is with native installs and upgrades.  The NetBackup
+# install script may honor specific documented options.
+
+CLIENT_NAME = XLOCALHOSTX
+#    Description: This option specifies the name that NetBackup uses to identify
+#                 this machine. The XLOCALHOSTX value lets the local host provide
+#                 the machine name. If this value is used, it may be possible to use
+#                 the same answer file on all machines within a single master server
+#                 domain. This value is added to the bp.conf file.
+#    Default value: N/A
+#    Required for initial install: Yes
+#    Required for upgrade: If provided, the value must match the current value
+#                          stored in the CLIENT_NAME field in bp.conf.
+
+MACHINE_ROLE = MASTER
+#    Description: This option specifies the NetBackup role to install and configure
+#                 on this machine.
+#    Default value: N/A
+#    Required for initial install: Yes
+#    Required for upgrade: If provided, this value must match the configured
+#                          role on the machine.
+
+SERVER = {{ inventory_hostname_short }}
+#    Description: This option specifies the server name this machine recognizes as
+#                 the current NetBackup master server.  Additional SERVER= lines may
+#                 be added if there are other servers that should be recognized.
+#                 In the case where multiple SERVER= lines are present, the first
+#                 occurrence is the master server.  These entries are added to the
+#                 bp.conf file.
+#    Default value: N/A
+#    Required for initial install: Yes
+#    Required for upgrade: If provided, this value must match the first SERVER
+#                          entry in bp.conf.
+
+INSTALL_PATH = /usr
+#    Description: This option specifies the location to install the NetBackup binaries.
+#                 Only the absolute path to a base directory is required for this option.
+#                 The installer will automatically append /openv.
+#    Default Value: /usr
+#    Required for initial install: No
+#    Required for upgrade: This option will be ignored.  The install path cannot be
+#                          changed during an upgrade.
+
+LICENSE = {{ nbu_license_key }}
+#    Description: This option specifies the license key string to apply to the server.
+#                 Additional "LICENSE = key" lines may be added if more licenses are to be
+#                 applied.  This option only adds additional keys - no existing keys are
+#                 removed.
+#    Default Value: N/A
+#    Required for initial install: Yes
+#    Required for upgrade: No - provide if needed
+
+WEBSVC_GROUP = {{ nbu_webservices_group }}
+#    Description: This option specifies the group name of the account that will be used by
+#                 the NetBackup web server. This group must already exist on the system.
+#                 This option is honored by the NetBackup installation script.
+#    Default Value: nbwebgrp
+#    Required for initial install: No
+#    Required for upgrade: No
+
+WEBSVC_USER = {{ nbu_webservices_user }}
+#    Description: This option specifies the user name of the account that will be used by
+#                 the NetBackup web server. This user must already exist on the system.
+#                 This option is honored by the NetBackup installation script.
+#    Default Value: nbwebsvc
+#    Required for initial install: No
+#    Required for upgrade: No
+
+SERVICE_USER = {{ nbu_services_user }}
+#    Description: This option specifies the user name of the account that will be used by
+#                 the NetBackup daemons. This user must already exist on the system.
+#                 This option is honored by the NetBackup installation script.
+#    Default Value: N/A
+#    Required for initial install: Yes
+#    Required for upgrade: Maybe - only required if SERVICE_USER does not exist in bp.conf.
+
+START_JOB_DAEMONS  = yes 
+#    Description: This option specifies whether the NetBackup daemons that control the
+#                 execution of jobs should be started.
+#    Default Value: yes
+#    Required for initial install: No
+#    Required for upgrade: No
+
+#OPSCENTER_SERVER = 
+#    Description: This option specifies the name of the OpsCenter server that will manage
+#                 this NetBackup master server.
+#    Default Value: NONE
+#    Required for initial install: No
+#    Required for upgrade: No
+
+USAGE_INSIGHTS_FILE_PATH = {{ nbu_server_software_dir }}/veritas_customer_registration_key.json
+#    Description: This option specifes the path and file name of the Usage Insights customer
+#                 registration key file.
+#    Default Value: N/A
+#    Required for initial install: Yes
+#    Required for upgrade: Maybe - upgrades from pre-NetBackup 8.1.2 will require this option.
+
+#RBAC_DOMAIN_TYPE = <domain_type>
+#    Description: This option specifies the domain type of the principal that will be configured
+#                 to have the role-based access control (RBAC) permissions
+#                 for the security administrator and backup administrator roles.
+#                 This option is honored by the NetBackup installation script.
+#    Default Value: N/A
+#    Required for initial install: No
+#    Required for upgrade: No
+
+#RBAC_DOMAIN_NAME = <domain_name>
+#    Description: This option specifies the domain name of the principal that will be configured
+#                 to have the role-based access control (RBAC) permissions
+#                 for the security administrator and backup administrator roles.
+#                 This option is honored by the NetBackup installation script.
+#    Default Value: N/A
+#    Required for initial install: No
+#    Required for upgrade: No
+
+#RBAC_PRINCIPAL_TYPE = USER | USERGROUP
+#    Description: This option specifies the type of the principal that will be configured
+#                 to have the role-based access control (RBAC) permissions
+#                 for the security administrator and backup administrator roles.
+#                 This option is honored by the NetBackup installation script.
+#    Default Value: N/A
+#    Required for initial install: No
+#    Required for upgrade: No
+
+#RBAC_PRINCIPAL_NAME = <principal_name>
+#    Description: This option specifies the name of the principal that will be configured
+#                 to have the role-based access control (RBAC) permissions
+#                 for the security administrator and backup administrator roles.
+#                 This user or usergroup must already exist on the system.
+#                 This option is honored by the NetBackup installation script.
+#    Default Value: N/A
+#    Required for initial install: No
+#    Required for upgrade: No
+
+ALLOW_PRE_90_UPGRADE= yes 
+#    Description: This option specifies whether an upgrade from a pre-9.0 master server
+#                 is allowed to proceed.  NetBackup 9.0 and later versions support the
+#                 expiration dates that extend beyond the year 2038.  To ensure
+#                 compatibility with previous NetBackup versions, all items with an
+#                 "infinite" expiration date are updated to reflect the new "infinite"
+#                 expiration date value.  This conversion may extend the time that is
+#                 required to complete the upgrade.  Review the following article for more
+#                 information: https://www.veritas.com/content/support/en_US/article.100048600
+#    Default Value: N/A
+#    Required for initial install: No
+#    Required for upgrade: No

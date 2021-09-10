@@ -1,0 +1,4 @@
+---
+# tasks file for nbu-api-monitor-jobs-get
+
+- import_tasks: get_job_info.yml

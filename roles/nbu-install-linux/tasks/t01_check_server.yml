@@ -1,0 +1,50 @@
+# Verify the server meets the minimum specification for NetBackup servers
+
+- name: -> Verify the server operating system is compatible with NetBackup
+  assert: 
+    that: "ansible_os_family == 'RedHat'"
+    success_msg: "PASS - Operating system platform is compatible"
+    fail_msg: "Incompatible OS - Detected OS is {{ansible_os_family}}"
+  tags:
+    - server_pre_check
+    - server_pre_check_platform
+
+- name: -> Verify the server operating system version is compatible with NetBackup
+  assert: 
+    that: "ansible_distribution_version is version_compare('7.7', '>=') "
+    success_msg: "PASS - Operating system version is compatible"
+    fail_msg: "Incompatible OS Version- Detected OS Version is {{ansible_distribution_version}}"
+  tags:
+    - server_pre_check
+    - server_pre_check_version
+
+- name: -> Verify the server has the minimum number of CPUs for NetBackup role
+  assert: 
+    that: ansible_processor_count | int >= {{server_cpu}}
+    success_msg: "PASS - Server has minimum number of CPU cores required for {{ ansible_local.netbackup.domain.role }} role"
+    fail_msg: "Server CPU = {{ ansible_processor_count }} - Server does not have sufficent number of CPUs for NetBackup role"
+  tags:
+    - server_pre_check
+    - server_pre_check_cpu
+
+- name: -> Verify the server has sufficent memory for NetBackup role
+  assert: 
+    that: ansible_memtotal_mb | int >= {{server_ram}}
+    success_msg: "PASS - Server has minimum RAM required for {{ ansible_local.netbackup.domain.role }} role"
+    fail_msg: "Server RAM = {{ ansible_memtotal_mb }}MB - Server does not have sufficent RAM for NetBackup role"
+  tags:
+    - server_pre_check
+    - server_pre_check_ram
+
+- name: -> Verify the server has required mountpoints for NetBackup role
+  assert:
+    that: "{{ (mount1.size_total / 1073154621.44) | round(1, 'common') }} >= {{ item.value.min_size }}"
+    success_msg: "PASS - Mountpoint for {{ item.value.description }} ({{mountname1}}) exists"
+    fail_msg: "Insufficent disk space or problem with expected mountpoint"
+  with_dict: '{{ server_mounts }}'
+  vars:
+    mount1: "{{ ansible_mounts | selectattr('mount','equalto',mountname1) | list | first }}"
+    mountname1: "{{ item.value.path }}"
+
+
+

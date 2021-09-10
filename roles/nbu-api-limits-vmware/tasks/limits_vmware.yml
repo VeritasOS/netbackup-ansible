@@ -1,0 +1,28 @@
+# tasks file for nbu-api-limits-vmware
+
+# Set resource limits for NetBackup using API
+
+- name: -> Set NetBackup resource limits for VMware
+  uri:
+    url: "{{ nbu_api_base_url + 'config/resource-limits' }}"
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_API_KEY }}"
+    body: "{{ lookup('template', 'limits_vmware.j2') }}"
+    body_format: json
+    validate_certs: False
+    status_code:
+      - 204
+      - 400
+      - 401
+      - 409
+      - 415
+      - 500
+      - 501
+  register: result
+  changed_when: result.status != 409
+  failed_when: result.status not in [204, 409]
+  until:  result.status == 204 or result.status == 409
+  tags:
+    - nbu_limits_vmware

@@ -1,0 +1,125 @@
+﻿- name: -> Add Access rights to role - Storage - Storage Servers
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CSTORAGE%7CSTORAGE-SERVERS%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role1/storage/rbac_access_add_storage_storage-servers.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Storage - Disk Pools
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CSTORAGE%7CDISK-POOLS%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role1/storage/rbac_access_add_storage_disk-pools.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Storage - Storage Units
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CSTORAGE%7CSTORAGE-UNITS%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role1/storage/rbac_access_add_storage_storage-units.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Storage - Storage Servers - Disk Volumes
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CSTORAGE%7CSTORAGE-SERVERS%7CDISK-VOLUMES%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role1/storage/rbac_access_add_storage_storage-servers_disk-volumes.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Storage - KMS
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CSTORAGE%7CKMS%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role1/storage/rbac_access_add_storage_kms.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Storage - Cloud
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CSTORAGE%7CCLOUD%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role1/storage/rbac_access_add_storage_cloud.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Storage - Tape Media - Volume Pools
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CSTORAGE%7CTAPE-MEDIA%7CVOLUME-POOLS%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role1/storage/rbac_access_add_storage_tape-media_volume-pools.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Storage - Tape Media - Server Groups
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CSTORAGE%7CTAPE-MEDIA%7CSERVER-GROUPS%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role1/storage/rbac_access_add_storage_tape-media_server_groups.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Storage - Target Storage Servers
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CSTORAGE%7CTARGET-STORAGE-SERVERS%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role1/storage/rbac_access_add_storage_target-storage-servers.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true

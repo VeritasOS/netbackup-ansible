@@ -1,0 +1,4 @@
+---
+# tasks file for nbu-api-slp-create
+
+- import_tasks: create_slp.yml

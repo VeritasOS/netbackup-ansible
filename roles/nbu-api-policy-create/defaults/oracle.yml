@@ -1,0 +1,18 @@
+#### Oracle Policy ####
+
+# Policy Attributes
+nbu_policy_name: <policy_name>
+nbu_policy_stu_name: <policy_slp>
+nbu_policy_sched_name: <policy_sched>
+
+# Client Information 
+nbu_policy_client_name: <policy_client>
+nbu_policy_client_os: RedHat2.6.32
+nbu_policy_client_hardware: Linux
+
+# Instance Information
+ora_instance_name: MXH
+ora_instance_hostname: mh-nbu01-05
+ora_user: oracle
+ora_password: P@ssw0rd
+

@@ -1,0 +1,138 @@
+# Add NetBackup user to auth.conf
+
+- name: -> Add the NetBackup admin user to the auth.conf file
+  lineinfile:
+    dest: '/usr/openv/java/auth.conf'
+    regexp: "^{{ nbu_admin_user }}"
+    line: "{{ nbu_admin_user }} ADMIN=ALL JBP=ALL"
+  tags:
+    - nbu_master_config
+    - nbu_master_config_authconf
+
+# Enable KMS on NetBackup Master server
+
+- name: -> Enable KMS encryption on NetBackup Master Server
+  shell: |
+         pgrep nbkms 1>/dev/null 2>/dev/null
+         RESULT=$?
+         if [ $RESULT -eq 0 ]; then
+             echo "KMSAlreadyConfigured"
+         else
+             (echo "{{ nbu_kms_hmk_password }}"; echo "{{ nbu_kms_hmk_password }}"; echo "{{ nbu_kms_hmk_name }}"; echo "{{ nbu_kms_kpk_password }}"; echo "{{ nbu_kms_kpk_password }}"; echo "{{ nbu_kms_kpk_name }}") | /usr/openv/netbackup/bin/nbkms -createemptydb
+             /usr/openv/netbackup/bin/nbkms
+             /usr/openv/netbackup/bin/admincmd/nbkmsutil -createkg -kgname "{{ nbu_kms_kg_name }}"
+             (echo "{{ nbu_kms_kg_password }}"; echo "{{ nbu_kms_kg_password }}" ) | /usr/openv/netbackup/bin/admincmd/nbkmsutil -createkey -kgname "{{ nbu_kms_kg_name }}" -keyname "{{ nbu_kms_key_name }}" -activate -desc "{{ nbu_kms_key_description }}"
+         fi
+  args:
+    chdir: /usr/openv/netbackup/bin/admincmd
+  register: cmd_result
+  changed_when: cmd_result.stdout != "KMSAlreadyConfigured"
+  tags:
+    - nbu_master_config
+    - nbu_master_config_kms
+
+# Enabled Enhanced Auditing
+
+- name: -> Enable enhanced auditing on NetBackup master server
+  shell: |
+         grep "USE_AUTHENTICATION = ON" '/usr/openv/netbackup/bp.conf'
+         RESULT=$?
+         if [ $RESULT -eq 0 ]; then
+             REPLY=0
+             exit $REPLY
+         else
+             echo y | /usr/openv/netbackup/bin/admincmd/bpnbaz -SetupExAudit
+         fi         
+  ignore_errors: true
+  register: cmd_result
+  failed_when: cmd_result.rc != 0
+  changed_when: cmd_result.stdout != "USE_AUTHENTICATION = ON"
+  notify: restart_netbackup
+  tags:
+    - nbu_master_config
+    - nbu_master_config_auditing
+
+# Flush Handlers Now - Restart NetBackup after changes
+
+- name: -> Flush handlers after enabling enhanced auditing on NetBackup master server to force services restart
+  meta: flush_handlers
+  tags:
+    - nbu_master_config
+    - nbu_master_config_auditing
+
+#Check NetBackup is back online before proceeding. 
+
+- name: -> Check NetBackup EMM Database is responding
+  shell: /usr/openv/netbackup/bin/admincmd/nbemmcmd -listhosts
+  register: nbemmcmd_result
+  until: nbemmcmd_result.rc == 0
+  changed_when: nbemmcmd_result.rc != 0
+  tags:
+    - nbu_master_config
+    - nbu_master_config_audituser
+
+- name: -> Check NetBackup Jobs Database
+  shell: /usr/openv/netbackup/bin/admincmd/bpdbjobs
+  register: bpdbjobs_result
+  until: bpdbjobs_result.rc == 0
+  changed_when: bpdbjobs_result.rc != 0
+  tags:
+    - nbu_master_config
+    - nbu_master_config_audituser
+
+- name: -> Check NetBackup Audit Report
+  shell: /usr/openv/netbackup/bin/admincmd/nbauditreport
+  register: nbauditreport_result
+  until: nbauditreport_result.rc == 0
+  changed_when: nbauditreport_result.rc != 0
+  tags:
+    - nbu_master_config
+    - nbu_master_config_audituser
+
+
+# Add NetBackup Admin User to Web Service
+
+- name: -> Add NetBackup admin user to web service
+  shell: |
+         /usr/openv/netbackup/bin/admincmd/bpnbaz -Lookupuser "unixpwd:{{ master_server }}:{{ nbu_admin_user }}" | grep "User has NetBackup Administrator Privileges."
+         RESULT=$?
+         if [ $RESULT -eq 0 ]; then
+             REPLY=0
+             exit $REPLY
+         else
+             /usr/openv/netbackup/bin/admincmd/bpnbaz -AddUser "unixpwd:{{ master_server }}:{{ nbu_admin_user }}"
+         fi
+  ignore_errors: true
+  register: cmd_result
+  failed_when: cmd_result.rc != 0
+  changed_when: cmd_result.stdout != "User has NetBackup Administrator Privileges."
+  tags:
+    - nbu_master_config
+    - nbu_master_config_audituser
+
+## KMS Part 2
+
+- name: -> Register KMS with WebService - 8.3+
+  shell: |
+         ( echo "{{ master_server }}"; echo "0"; echo unixpwd; echo "{{ nbu_admin_user }}"; echo "{{ nbu_admin_password }}" ) |  /usr/openv/netbackup/bin/bpnbat -login -loginType WEB 
+         /usr/openv/netbackup/bin/nbkmscmd -discoverNBkms
+  args:
+    chdir: /usr/openv/netbackup/bin/admincmd
+  when: cmd_result.stdout != "KMSAlreadyConfigured"
+  tags:
+    - nbu_master_config
+    - nbu_master_config_kms
+
+- name: -> Set NetBackup Catalog DR Policy Password
+  shell: |
+         ( echo "{{ master_server }}"; echo "0"; echo unixpwd; echo "{{ nbu_admin_user }}"; echo "{{ nbu_admin_password }}") |  /usr/openv/netbackup/bin/bpnbat -login -loginType WEB
+         (echo "{{ nbu_dr_password }}"; echo "{{ nbu_dr_password }}" ) | /usr/openv/netbackup/bin/admincmd/nbseccmd -drpkgpassphrase
+  register: set_dr_password
+  changed_when: set_dr_password.rc == 0
+  failed_when: 
+    - set_dr_password.rc != 89
+    - set_dr_password.rc != 0
+  tags:
+    - nbu_master_config
+    - nbu_master_config_drpasswd
+

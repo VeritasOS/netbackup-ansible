@@ -1,0 +1,24 @@
+# Get Authorisation Token
+
+- name: -> Get NetBackup API authorisation token
+  uri:
+    url: "{{ nbu_api_base_url + 'login' }}"
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+    body:
+      domainName: "{{ nbu_api_hostname }}"
+      domainType: "unixpwd"
+      userName: "{{ nbu_admin_user }}"
+      password: "{{ nbu_admin_password }}"
+    body_format: json
+    status_code: 201, 401
+    validate_certs: no
+  register: task_nbu_get_auth_token_result
+  retries: 5
+  delay: 2
+  until:  task_nbu_get_auth_token_result.status == 201
+  when: "'Master Server' not in nbu_role"
+  tags:
+    - nbu_msdp_local_create
+    - nbu_msdp_local_create_token

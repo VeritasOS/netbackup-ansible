@@ -1,0 +1,14 @@
+---
+# handlers file for nbu-deploy-media-rhel
+
+- name: restart_firewalld
+  systemd:
+    name: firewalld
+    state: reloaded 
+
+- name: restart_netbackup
+  shell: |
+          (echo "y" | /usr/openv/netbackup/bin/bp.kill_all)
+          /usr/openv/netbackup/bin/bp.start_all
+  args:
+    warn: false

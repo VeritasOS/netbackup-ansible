@@ -1,0 +1,57 @@
+{
+    "data": {
+        "type": "slov3",
+        "attributes": {
+            "description": "{{ slo_description }}",
+            "name": "{{slo_name}}",
+            "schedules": [
+                {
+                    "scheduleType": "FULL",
+                    "backupWindows": [
+                        {
+                            "dayOfWeek": 1,
+                            "startSeconds": 0,
+                            "durationSeconds": 89999
+                        }
+                    ],
+                    "frequencySeconds": 86400,
+                    "retention": {
+                        "value": 2,
+                        "unit": "WEEKS"
+                    },
+                    "scheduleName": "{{slo_sched}}",
+                    "backupStorageUnit": "{{slo_stu}}"
+                }
+            ],
+            "allowSubscriptionEdit": false,
+            "workloadType": "{{slo_type}}",
+            "policyNamePrefix": "{{slo_prefix}}",
+            "policyDefinition": {
+                "policy": {
+                    "policyType": "MS-SQL-Server",
+                    "policyAttributes": {
+                        "retainSnapshot": false,
+                        "snapshotBackup": true,
+                        "snapshotMethod": "VSS",
+                        "snapshotMethodArgs": "prov_type=0,snap_attr=0",
+                        "databaseOptions": {
+                            "availabilityDatabaseBackupPreference": "None",
+                            "backupBlockSize": "64 KB",
+                            "backupStripes": 1,
+                            "clientBuffersPerStripe": 2,
+                            "convertDiffBackupsToFull": false,
+                            "copyOnlyBackup": false,
+                            "maxTransferSize": "4 MB",
+                            "parallelBackupOps": 8,
+                            "skipReadOnlyFilegroups": false,
+                            "skipUnavailableDatabases": false,
+                            "sqlServerChecksum": "None",
+                            "useSQLServerCompression": false,
+                            "vdiTimeout": 300
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

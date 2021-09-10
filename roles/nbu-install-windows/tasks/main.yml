@@ -1,0 +1,10 @@
+---
+# tasks file for nbu-deploy-client-win
+
+#### Install Software and Configure NetBackup Role ####
+
+## Step 1 - Verify Compatibility
+
+- import_tasks: t01_check_server.yml
+- import_tasks: t02_nbu_install_client_pre.yml
+- import_tasks: t03_nbu_install_client.yml

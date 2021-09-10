@@ -1,0 +1,27 @@
+- name: -> Create NetBackup protection plan for SQL Server
+  uri:
+    url: https://{{ nbu_api_hostname }}:1556/netbackup/servicecatalog/slos
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_API_KEY }}"  
+    body: "{{ lookup('template', 'nbu_slo_sql.j2') }}"
+    body_format: json
+    validate_certs: False
+    timeout: "300"
+    status_code:
+      - 201
+      - 400
+      - 401
+      - 404
+      - 405
+      - 409
+      - 500
+  register: result
+  changed_when: result.status != 409
+  failed_when: result.status not in [201, 409]
+  retries: 5
+  delay: 2
+  until:  result.status == 201 or result.status == 409
+  tags:
+    - nbu_cc_create

@@ -1,0 +1,55 @@
+﻿- name: -> Add Access rights to role - Protection - Policies
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CPROTECTION%7CPOLICIES%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role2/protection/rbac_access_add_protection_policies.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Protection - SLPs
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CPROTECTION%7CSLPS%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role2/protection/rbac_access_add_protection_slps.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Protection - SLPs Settings
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CPROTECTION%7CSLP-SETTINGS%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role2/protection/rbac_access_add_protection_slps_settings.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Protection - SLPs Windows
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CPROTECTION%7CSLP-WINDOWS%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role2/protection/rbac_access_add_protection_slps_windows.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true

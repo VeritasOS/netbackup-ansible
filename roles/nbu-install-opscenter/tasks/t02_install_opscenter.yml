@@ -1,0 +1,47 @@
+- name: -> Create temporary directory for OpsCenter software
+  win_file:
+    path: C:\Temp
+    state: directory
+  tags:
+    - nbu_install_opscenter
+
+- name: -> Download NetBackup OpsCenter Software - Windows
+  win_get_url:
+    url: "{{ nbu_software_opscenter }}"
+    dest: C:\Temp\{{ opscenter_pkg }}
+    force: no
+    url_username: admin
+    url_password: L3tm31n!
+  tags:
+    - nbu_install_opscenter
+
+- name: -> Extract NetBackup Software
+  win_unzip:
+    src: C:\Temp\{{ opscenter_pkg }}
+    dest: C:\Temp\
+    creates: C:\Temp\{{ opscenter_dir }}
+  tags:
+    - nbu_install_opscenter
+
+- name: -> Upload the NetBackup installation answerfile
+  template:
+    src: "opscenter_resp.j2"
+    dest: C:\Temp\opscenter_respfile.xml
+  tags:
+    - nbu_install_opscenter
+
+- name: -> Check if NetBackup has already been installed
+  win_stat:
+    path: C:\Program Files\Symantec\OpsCenter\server
+  register: nbu_install_status
+  tags:
+    - nbu_install_opscenter
+
+- name: -> Install NetBackup OpsCenter Software
+  win_command: setup.exe -Silent -RespFile C:\Temp\opscenter_respfile.xml
+  args:
+    chdir: C:\Temp\{{ opscenter_dir }}\x64\Server
+  when: nbu_install_status.stat.exists == false
+  tags:
+    - nbu_install_opscenter
+

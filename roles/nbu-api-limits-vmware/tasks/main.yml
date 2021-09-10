@@ -1,0 +1,4 @@
+---
+# tasks file for nbu-api-limits-vmware-set
+
+- import_tasks: limits_vmware.yml

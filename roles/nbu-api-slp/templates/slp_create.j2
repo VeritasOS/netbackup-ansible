@@ -1,0 +1,39 @@
+{
+    "data": {
+        "type": "slp",
+        "id": "{{ slp_name }}",
+        "attributes": {
+            "slpName": "{{ slp_name }}",
+            "operationList": [
+                {
+                    "flagValues": [],
+                    "operationIndex": 1,
+                    "operationType": "{{ slp_step1_type }}",
+                    "retentionPeriod": {
+                        "unit": "{{ slp_step1_unit }}",
+                        "value": "{{ slp_step1_value }}"
+                    },
+                    "retentionType": "FIXED",
+                    "sourceOperationIndex": 0,
+                    "storage": {
+                        "name": "{{ slp_step1_stu }}"
+                    }
+                },
+                {
+                    "flagValues": [],
+                    "operationIndex": 2,
+                    "operationType": "{{ slp_step2_type }}",
+                    "retentionPeriod": {
+                        "unit": "{{ slp_step2_unit }}",
+                        "value": "{{ slp_step2_value }}"
+                    },
+                    "retentionType": "FIXED",
+                    "sourceOperationIndex": 1,
+                    "storage": {
+                        "name": "{{slp_step2_stu}}"
+                    }
+                }
+            ]
+        }
+    }
+} 

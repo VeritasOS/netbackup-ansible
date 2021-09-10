@@ -1,0 +1,85 @@
+- name: -> Get NetBackup API authorisation token
+  uri:
+    url: "{{ nbu_api_base_url + 'login' }}"
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+    body:
+      domainName: "{{ nbu_api_hostname }}"
+      domainType: "unixpwd"
+      userName: '{{ NBU_CLI_USER_NAME }}'
+      password: '{{ NBU_CLI_USER_PASSWORD }}'
+    body_format: json
+    status_code: 201, 401
+    validate_certs: no
+  register: task_nbu_get_auth_token_result
+  retries: 5
+  delay: 2
+  until:  task_nbu_get_auth_token_result.status == 201
+  tags:
+    - server_nbu_prep
+    - server_nbu_prep_authtoken
+    
+- name: -> Check to see if the user has an existing APIKEY
+  uri:
+    url: https://{{ nbu_api_hostname }}:1556/netbackup/security/api-keys?filter=userName%20eq%20'{{user}}'&page%5Boffset%5D=0
+    method: GET
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ task_nbu_get_auth_token_result.json.token }}"      
+    body_format: json
+    status_code: 200, 400, 404, 500
+    validate_certs: no
+  register: api_key_root_check
+  failed_when: api_key_root_check.status not in [200]
+  retries: 5
+  delay: 2
+  until:  api_key_root_check.status == 200
+  tags:
+    - get_api_key 
+
+- name: -> Remove existing APIKEY
+  uri:
+    url: https://{{ nbu_api_hostname }}:1556/netbackup/security/api-keys/{{ api_key_root_check.json.data[0].id }}
+    method: DELETE
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ task_nbu_get_auth_token_result.json.token }}"      
+    body_format: json
+    status_code: 204, 404, 500
+    validate_certs: no
+  register: api_key_root_remove
+  failed_when: api_key_root_remove.status not in [204]
+  retries: 5
+  delay: 2
+  until:  api_key_root_remove.status == 204
+  tags:
+    - get_api_key    
+  when: api_key_root_check.json.data[0].id is defined
+  ignore_errors: yes
+
+- name: -> Generate new APIKEY for user
+  uri:
+    url: https://{{ nbu_api_hostname }}:1556/netbackup/security/api-keys
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ task_nbu_get_auth_token_result.json.token }}"      
+    body: "{{ lookup('template', 'get_api_key.j2') }}"
+    body_format: json
+    status_code: 201, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: api_key_root
+  failed_when: api_key_root.status not in [201, 409]
+  retries: 5
+  delay: 2
+  until:  api_key_root.status == 201 or api_key_root.status == 209
+  tags:
+    - get_api_key
+
+- name: -> Set the APIKEY as a Fact
+  set_fact:
+    NBU_APIKEY: "{{ api_key_root.json.data.attributes.apiKey }}"
+  tags:
+    - os_disk_config
+

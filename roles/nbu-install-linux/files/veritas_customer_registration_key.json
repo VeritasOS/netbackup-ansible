@@ -1,0 +1,21 @@
+{
+	"active_account_information": {
+		"customer_identifier_value": "anonymous",
+		"selection_type": "temp",
+		"customer_identifier_document_version": "1.0",
+		"customer_identifier_document_created_by": "smart_meter",
+		"customer_identifier_document_updated_by": "smart_meter",
+		"customer_identifier_document_timestamp": 1525120750
+	},
+	"customer_account_information": [{
+		"customer_identifier_value": "anonymous",
+		"customer_identifier": "account_id",
+		"customer_type": "unknown",
+		"licensing_model": "unknown",
+		"entitlement": [{
+			"entitlement_id": "id",
+			"quantity": 0
+		}]
+
+	}]
+}

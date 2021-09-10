@@ -1,0 +1,26 @@
+- name: -> Get the AD group ID
+  shell: ( /usr/openv/netbackup/sec/at/bin/vssat validategroup -g "{{ nbu_group_name }}" -d "{{ nbu_group_type }}" -b "{{ ansible_local.netbackup.domain.name }}:1556:nbatd" | awk '/ID/{print $3}' )
+  register: rbac_group_id
+
+- name: -> Set AD Group ID as a fact
+  set_fact:
+    rbac_group_id: "{{ rbac_group_id.stdout }}"
+
+- debug:
+    msg: "{{ rbac_group_id }}"
+
+- name: -> Add User to newly created role
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/roles/{{ role_id }}/relationships/group-principals
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', 'rbac_group_add.j2') }}"
+    body_format: json
+    status_code: 200, 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+

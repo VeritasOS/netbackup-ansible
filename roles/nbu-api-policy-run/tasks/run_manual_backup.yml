@@ -1,0 +1,70 @@
+- name: NetBackup -> Run manual backup 
+  uri:
+    url: https://{{ nbu_api_hostname }}:1556/netbackup/admin/manual-backup
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"      
+    body: "{{ lookup('template', 'run_manual_backup.j2') }}"
+    body_format: json
+    validate_certs: False
+    status_code:
+      - 200
+      - 202
+      - 400
+      - 405
+      - 406
+      - 415
+      - 500
+      - 503
+  register: backup_jobid
+  tags:
+    - manual_backup
+
+- name: -> NetBackup -> Set job ID as fact
+  set_fact:
+    backupjob_id: '{{ backup_jobid.json.data[0].id }}'
+  tags:
+    - manual_backup
+
+- name: NetBackup -> Wait for backup job to complete
+  uri:
+    url: https://{{ nbu_api_hostname }}:1556/netbackup/admin/jobs/{{backupjob_id}}
+    method: GET
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"      
+    validate_certs: False
+    timeout: "300"
+    status_code:
+      - 200
+      - 401
+      - 404
+      - 405
+      - 406
+      - 415
+      - 500
+  register: backupjob
+  changed_when: backupjob.status != 200
+  failed_when: backupjob.status not in [200]
+  retries: 10
+  delay: 10
+  until:  backupjob.json.data.attributes.state == "DONE"
+  tags:
+    - manual_backup
+
+- name: -> NetBackup -> Set job start and end time as facts
+  set_fact:
+    backupjob_starttime: '{{ backupjob.json.data.attributes.startTime }}'
+    backupjob_endtime: '{{ backupjob.json.data.attributes.endTime }}'
+    backupjob_size: '{{ backupjob.json.data.attributes.kilobytesTransferred }}'
+    backupjob_dedup: '{{ backupjob.json.data.attributes.dedupRatio }}'
+    backupjob_duration: '{{ backupjob.json.data.attributes.elapsedTime }}'
+    backupjob_status: '{{ backupjob.json.data.attributes.status }}'
+    backupjob_files: '{{ backupjob.json.data.attributes.numberOfFiles }}'
+  tags:
+    - manual_backup
+
+
+
+    

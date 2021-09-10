@@ -1,0 +1,5 @@
+---
+# handlers file for nbu-api-diskpool-msdp-cloud-aws-create
+
+- name: restart_netbackup
+  reboot: {}

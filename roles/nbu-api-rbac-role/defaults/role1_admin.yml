@@ -1,0 +1,11 @@
+# Admins
+
+# RBAC - General
+rbac_user_info: ":{{ nbu_user }}:unixpwd:{{ rbac_user_id }}"
+rbac_access_id: 1
+
+#RBAC - Role
+rbac_role: '{{ nbu_rbac_role }}'									# Must update "get_role_id" if changed
+rbac_role_desc: "NetBackup Role defined for Full Administrators"
+
+

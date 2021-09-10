@@ -1,0 +1,17 @@
+---
+# defaults file for nbu-api-unishare-create
+
+# Master Server Hostname
+master_server: "{{ NBU_MASTER_SERVER }}"
+
+# API - Information
+nbu_api_hostname: "{{ master_server }}"
+nbu_api_port: '1556'
+nbu_api_base_url: "{{ 'https://' + nbu_api_hostname + ':' + nbu_api_port + '/netbackup/' }}"
+nbu_api_content_type: application/vnd.netbackup+json;version=5.0;charset=UTF-8
+
+# Universal Share - Configuration Information
+
+# Client - Mount
+nbu_us_client_mount: /mnt/nbu_us_{{nbu_us_host_name}}
+nbu_us_client_mount_full: "{{nbu_us_host_name}}:{{usexport}}"

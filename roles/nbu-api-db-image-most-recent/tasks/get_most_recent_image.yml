@@ -1,0 +1,84 @@
+- name: -> Get all backup images found in catalog
+  uri:
+    url: https://{{ nbu_api_hostname }}:1556/netbackup/catalog/images
+    method: GET
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_API_KEY }}"      
+    validate_certs: False
+    status_code:
+      - 200
+      - 400
+      - 401
+  register: catalog_images_all
+  tags:
+    - nbu_db_image_recent
+
+- name: -> List all backup images found in catalog
+  set_fact:
+    image_backupid: "{{ catalog_images_all.json.data | map(attribute='id') | list }}"
+  tags:
+    - nbu_db_image_recent
+
+- name: -> List all backup images found in catalog for "{{ client_name }}" and policy type "{{ policy_type }}"
+  debug: msg="{{ catalog_images_all.json.data | json_query(myquery) }}"
+  vars:
+    myquery: "[? attributes.clientName==`{{client_name}}` && attributes.policyType==`{{ policy_type }}` ].{Backup_ID: id,Policy_Type: attributes.policyType, Backup_Time: attributes.backupTime }"
+  register: client_ids_type
+  tags:
+    - nbu_db_image_recent
+
+- name: -> Register most recent backup image information
+  debug: msg="{{ catalog_images_all.json.data | json_query(myquery) | first }}"
+  vars:
+    myquery: "[? attributes.clientName==`{{client_name}}` && attributes.policyType==`{{ policy_type }}` ].{Backup_ID: id,Policy_Type: attributes.policyType, Backup_Time: attributes.backupTime }"
+  register: most_recent_backup
+  tags:
+    - nbu_db_image_recent
+
+- name: -> Display most recent backup image information
+  debug: msg="{{ most_recent_backup }}"
+  register: result2
+  tags:
+    - nbu_db_image_recent
+
+- name: -> Register restore information - Backup ID
+  debug: msg="{{ catalog_images_all.json.data | json_query(myquery) | first }}"
+  vars:
+    myquery: "[? attributes.clientName==`{{client_name}}` && attributes.policyType==`{{ policy_type }}` ].id "
+  register: backup_id
+  tags:
+    - nbu_db_image_recent
+
+- name: -> Register restore information - Policy Type
+  debug: msg="{{ catalog_images_all.json.data | json_query(myquery) | first }}"
+  vars:
+    myquery: "[? attributes.clientName==`{{client_name}}` && attributes.policyType==`{{ policy_type }}` ].attributes.policyType "
+  register: start_time
+  tags:
+    - nbu_db_image_recent
+
+- name: -> Register restore information - Date/Time
+  debug: msg="{{ catalog_images_all.json.data | json_query(myquery) | first }}"
+  vars:
+    myquery: "[? attributes.clientName==`{{client_name}}` && attributes.policyType==`{{ policy_type }}` ].attributes.backupTime "
+  register: start_time
+  tags:
+    - nbu_db_image_recent
+
+- name: -> Display most recent image information
+  debug:
+    msg:
+      - "{{ most_recent_backup.msg.Backup_ID }}"
+      - "{{ most_recent_backup.msg.Policy_Type }}"
+      - "{{ most_recent_backup.msg.Backup_Time }}"
+  tags:
+    - nbu_db_image_recent
+
+- name: -> Set backup information 
+  set_fact:
+    a_backup_id: "{{ most_recent_backup.msg.Backup_ID }}"
+    b_backup_type: "{{ most_recent_backup.msg.Policy_Type }}"
+    c_backup_time: "{{ most_recent_backup.msg.Backup_Time }}"
+  tags:
+    - nbu_db_image_recent

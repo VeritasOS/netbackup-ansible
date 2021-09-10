@@ -1,0 +1,8 @@
+---
+# handlers file for nbu-deploy-media-rhel
+
+- name: restart_firewalld
+  systemd:
+    name: firewalld
+    state: reloaded 
+

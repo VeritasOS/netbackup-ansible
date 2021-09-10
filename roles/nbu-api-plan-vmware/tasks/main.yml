@@ -1,0 +1,8 @@
+---
+# tasks file for nbu-api-plan-vmware-create
+
+- import_tasks: create_slo.yml
+- import_tasks: get_slo_id.yml
+- import_tasks: get_vm_id.yml
+- import_tasks: add_vm.yml
+

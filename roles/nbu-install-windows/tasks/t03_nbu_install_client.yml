@@ -1,0 +1,41 @@
+- name: -> Create temp directory
+  win_file:
+    path: C:\Temp
+    state: directory
+
+- name: -> Download Windows NetBackup Client Software
+  win_get_url:
+    url: "{{ nbu_client_software_win }}"
+    dest: C:\Temp\NetBackup_9.1_Win.zip
+    force: no
+    url_username: admin
+    url_password: L3tm31n!
+
+- name: -> Extract NetBackup Software
+  win_unzip:
+    src: C:\Temp\NetBackup_9.1_Win.zip
+    dest: C:\Temp\
+    creates: C:\Temp\NetBackup_9.1_Win
+
+- name: -> Upload the NetBackup installation answerfile
+  template:
+    src: "silentclient.j2"
+    dest: C:\Temp\NetBackup_9.1_Win\x64\silentclient.cmd
+  tags:
+    - nbu_install_client_rhel
+
+- name: -> Check if NetBackup has already been installed
+  win_stat:
+    path: C:\Program Files\Veritas\NetBackup
+  register: nbu_install_status
+  tags:
+    - nbu_server_install_master
+
+- name: -> Install NetBackup Software on Windows Client
+  win_command: silentclient.cmd
+  args:
+    chdir: C:\Temp\NetBackup_9.1_Win\x64
+  when: nbu_install_status.stat.exists == false
+  tags:
+    - nbu_server_install_master_software
+

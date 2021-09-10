@@ -1,0 +1,9 @@
+
+# NBU Global Parameters
+
+nbu_global_maxjobs: 64
+nbu_global_jobretry: 15
+nbu_global_compressdb: 2592000
+nbu_global_policyupdate: 1
+nbu_global_backupattempts: 6 1
+

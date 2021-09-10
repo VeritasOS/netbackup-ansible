@@ -1,0 +1,40 @@
+---
+#### Load the relevant variables file for nbu-install-linux ####
+
+- include_vars: defaults/master.yml
+  when: ansible_local.netbackup.domain.role == "master"
+
+- include_vars: defaults/media.yml
+  when: ansible_local.netbackup.domain.role == "media"
+
+- include_vars: defaults/clients_linux.yml
+  when: ansible_local.netbackup.domain.role == "client_linux"
+
+#### Install Software and Configure NetBackup Role ####
+
+## Step 1 - Verify Compatibility
+
+- import_tasks: t01_check_server.yml
+
+## Step 2 - Server Configuration (Servers Only)
+
+- import_tasks: t02_server_config.yml
+  when: 
+    - "'client_linux' not in ansible_local.netbackup.domain.role"
+
+## Step 3 - Install Server / Client - Preparation
+
+# Install - Preparation
+
+- import_tasks: t03_nbu_install_prep.yml
+
+## Step 4 - Install Server / Client
+
+- import_tasks: t04_nbu_install.yml
+
+## Step 5 - Install Server / Client - Post (Master Server Only)
+
+- import_tasks: t05_nbu_install_post.yml
+  when: "'master' in ansible_local.netbackup.domain.role"
+
+

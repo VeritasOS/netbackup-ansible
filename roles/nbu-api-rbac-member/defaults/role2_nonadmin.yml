@@ -1,0 +1,23 @@
+#### Defaults ####
+
+# Master Server Hostname
+master_server: "{{ NBU_MASTER_SERVER }}"
+
+# API - Information
+nbu_api_hostname: "{{ master_server }}"
+nbu_api_port: '1556'
+nbu_api_base_url: "{{ 'https://' + nbu_api_hostname + ':' + nbu_api_port + '/netbackup/' }}"
+nbu_api_content_type: application/vnd.netbackup+json;version=5.0;charset=UTF-8
+
+# RBAC - General
+rbac_user_info: ":{{ nbu_user }}:unixpwd:{{ rbac_user_id }}"
+rbac_access_id: 1
+
+# RBAC - AD Groups
+nbu_group_name: <AD_group_for_non_admins>
+nbu_group_type: "ldap:{{nbu_group_domain}}"
+nbu_group_domain: <domain_shortname e.g. veritas>
+nbu_group_info: "{{ nbu_group_domain }}:{{nbu_group_name}}:ldap:{{ rbac_group_id }}"
+
+
+

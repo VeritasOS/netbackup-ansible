@@ -1,0 +1,35 @@
+
+- name: -> Get NetBackup Universal Share ID
+  uri:
+    url: https://{{ nbu_api_hostname }}:1556/netbackup/storage/storage-servers/{{nbu_us_ssid}}/universal-shares
+    method: GET
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_API_KEY }}"      
+    validate_certs: False
+    timeout: "300"
+    status_code:
+      - 200
+      - 201
+      - 400
+      - 401
+      - 404
+      - 405
+      - 409
+      - 500
+  register: result
+  changed_when: result.status != 409
+  failed_when: result.status not in [200, 201, 409]
+  retries: 5
+  delay: 2
+  until:  result.status == 200 or result.status == 201 or result.status == 409 or result.status == 500
+  ignore_errors: true
+
+- name: -> Set NetBackup Universal Share ID as fact
+  set_fact:
+    usid: "{{ result.json.data[0].id }}"
+    usname: "{{ result.json.data[0].attributes.displayName  }}"
+    usexport: "{{ result.json.data[0].attributes.exportPath  }}"
+  delegate_to: "{{ item }}"
+  delegate_facts: True
+  with_items: "{{ groups['all'] }}"

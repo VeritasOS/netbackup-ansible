@@ -1,0 +1,26 @@
+
+# Server Specification
+server_cpu: 2
+server_ram: 2048
+server_mounts:
+  mount1:
+    path: '/cloudpoint'
+    min_size: 50
+    description: 'NetBackup CloudPoint'
+
+# OS Packages
+os_config_packages:
+  - podman
+
+# OS Packages
+pip_config_packages:
+  - pexpect
+
+# Linux OS - Firwalld
+os_config_firewalld:
+  - 80/tcp
+  - 443/tcp
+  - 5671/tcp
+
+# Software
+nbu_cp: URL to software (e.g. VRTScloudpoint-podman-9.0.1.0.9336.tar.gz )

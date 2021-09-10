@@ -1,0 +1,45 @@
+{
+  "data": {
+    "type": "recoveryRequest",
+    "attributes": {
+      "recoveryPoint": {
+        "client": "{{ nbu_vm_hostname }}",
+        "copyNumber": 1
+      },
+      "recoveryObject": {
+        "vmDisplayName": "{{ nbu_vm_hostname_recovered }}",
+        "vmDisks": [
+          {
+            "source": "{{ nbu_vm_datastore_source }}",
+            "destination": "{{ nbu_vm_datastore_target }}"
+          }
+        ],
+        "vmEnvironment": {
+          "vCenter": "{{ vcenter_hostname }}",
+          "esxiServer": "{{ vcenter_esxhostname }}",
+          "datacenter": "{{ vcenter_datacenter }}",
+          "vmFolder": "{{ vcenter_vmfolder }}",
+          "resourcePoolOrVapp": "{{ vcenter_resourcepool }}",
+          "vmxDatastore": "{{ vcenter_datatore }}",
+          "temporaryDatastore": "{{ vcenter_tmpdatastore }}",
+          "network": "{{ vcenter_network }}"
+        }
+      },
+        "recoveryOptions": {
+            "defaultVmDiskProvisioning": "thin",
+            "recoveryHost": "{{ nbu_recoveryhost }}",
+            "diskMediaServer": "{{ nbu_mediaserver }}",
+            "transportMode": "san:hotadd:nbd:nbdssl",
+            "overwriteExistingVm": true,
+            "powerOnAfterRecovery": true,
+            "recoverToVmxDatastore": true,
+            "removeBackingInformation": true,
+            "removeNetworkInterfaces": true,
+            "removeTagAssociations": true,
+            "retainHardwareVersion": true,
+            "retainInstanceUuid": true,
+            "retainBiosUuid": true
+        }
+    }
+  }
+}

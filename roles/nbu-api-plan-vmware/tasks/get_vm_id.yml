@@ -1,0 +1,24 @@
+- name: -> Get VM UUID 
+  uri:
+    url: https://{{ nbu_api_hostname }}:1556/netbackup/asset-service/workloads/{{slo_workload}}/assets?filter=dnsName%20eq%20%27{{slo_client}}%27&page%5Blimit%5D=100&page%5Bdisable%5D=true
+    method: GET
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_API_KEY }}"
+    validate_certs: False
+    timeout: "300"
+    status_code:
+      - 200
+      - 400
+      - 401
+      - 404
+      - 500
+  register: vm_list
+  tags:
+    - nbu_create_pp
+
+- name: NetBackup -> Set AWS VM ID as fact
+  set_fact:
+    vmware_vm: "{{ vm_list.json.data[0].id }}"  
+  tags:
+    - nbu_create_pp

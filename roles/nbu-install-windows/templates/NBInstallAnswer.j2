@@ -1,0 +1,9 @@
+CLIENT_NAME = XLOCALHOSTX
+SERVER = {{ master_server }}
+CA_CERTIFICATE_FINGERPRINT = {{ master_ca_cert.stdout }}
+AUTHORIZATION_TOKEN = {{ auth_token }}
+{% for media_server in groups['media'] %}
+SERVER = {{ media_server }}
+{% endfor %}
+MERGE_SERVERS_LIST = YES
+MACHINE_ROLE = CLIENT

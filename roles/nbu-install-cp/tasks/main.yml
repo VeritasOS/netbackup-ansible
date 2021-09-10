@@ -1,0 +1,14 @@
+---
+# tasks file for vrts-nbn-install
+
+- include_vars: defaults/cloudpoint.yml
+  when: ansible_local.netbackup.domain.role == "cloudpoint"
+
+# Compatibility - Check Server
+- import_tasks: t01_check_server.yml
+
+# OS Config - Master Server / Media Server Only
+- import_tasks: t02_server_config.yml
+
+# Install CloudPoint
+- import_tasks: t03_cp_install.yml

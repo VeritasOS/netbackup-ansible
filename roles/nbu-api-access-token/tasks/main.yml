@@ -1,0 +1,7 @@
+---
+# tasks file for nbu-api-access-token-get
+
+- import_tasks: nbu_api_token_get.yml
+  delegate_to: "{{ nbu_api_hostname }}"
+  
+

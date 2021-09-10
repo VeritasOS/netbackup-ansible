@@ -1,0 +1,7 @@
+#jinja2: trim_blocks:False
+{%- for item in list_of_rbac_roles.json.data -%}
+  {%- if item.attributes.name == nbu_rbac_role_ui -%}
+    {{ item.id }}
+  {%- endif -%}
+{%- endfor -%}
+

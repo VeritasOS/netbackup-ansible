@@ -1,0 +1,35 @@
+{
+    "data": {
+        "type": "accessDefinition",
+        "attributes": {
+            "propagation": "OBJECT_AND_CHILDREN"
+        },
+        "relationships": {
+            "role": {
+                "data": {
+                    "id": "{{ role_id }}",
+                    "type": "accessControlRole"
+                }
+            },
+            "operations": {
+              "data": [
+                  {
+                    "type": "accessControlOperation",
+                    "id": "|OPERATIONS|MANAGE-ACCESS|"
+                  },
+                  {
+                    "type": "accessControlOperation",
+                    "id": "|OPERATIONS|SECURITY|CERTIFICATE-MANAGEMENT|CERTIFICATE-AUTHORITIES|VIEW-HOSTS-MIGRATE-CA|"
+                  },
+                  {
+                    "type": "accessControlOperation",
+                    "id": "|OPERATIONS|SECURITY|CERTIFICATE-MANAGEMENT|CERTIFICATE-AUTHORITIES|MIGRATE-CA|"
+                  }
+              ]
+            }
+        }
+    }
+}
+
+
+    

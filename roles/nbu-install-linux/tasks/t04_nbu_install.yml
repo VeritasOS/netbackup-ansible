@@ -1,0 +1,149 @@
+- name: -> Check if NetBackup has already been installed - Chk2
+  stat:
+    path: /usr/openv/netbackup/bp.conf
+  register: nbu_install_status
+  tags:
+    - nbu_software_install
+
+- name: -> Upload the NetBackup installation answerfile
+  template:
+    src: 'NBInstallAnswer-media.j2'
+    dest: /tmp/NBInstallAnswer.conf
+  when: 
+    - nbu_install_status.stat.exists == false
+    - "'media' in ansible_local.netbackup.domain.role"
+  tags:
+    - nbu_software_install
+
+- name: -> Upload the NetBackup installation answerfile
+  template:
+    src: 'NBInstallAnswer-client-linux.j2'
+    dest: /tmp/NBInstallAnswer.conf
+  when: 
+    - nbu_install_status.stat.exists == false
+    - "'client_linux' in ansible_local.netbackup.domain.role"
+  tags:
+    - nbu_software_install
+
+## Install RPMS
+
+- name: -> Install NetBackup Server RPM - nbpck
+  yum:
+    name:  "{{ nbu_nbpck }}"
+    state: present
+    update_cache: true
+    disable_gpg_check: yes
+  ignore_errors: true
+  when: 
+    - nbu_install_status.stat.exists == false
+    - "'master' not in ansible_local.netbackup.domain.role"
+  tags:
+    - nbu_software_install
+
+- name: -> Install NetBackup Server RPM - pbx
+  yum:
+    name:  "{{ nbu_nbpbx }}"
+    state: present
+    update_cache: true
+    disable_gpg_check: yes
+  ignore_errors: true
+  when: 
+    - nbu_install_status.stat.exists == false
+    - "'master' not in ansible_local.netbackup.domain.role"
+  tags:
+    - nbu_software_install
+
+- name: -> Install NetBackup Server RPM - nbclnt
+  yum:
+    name:  "{{ nbu_nbclt }}"
+    state: present
+    update_cache: true
+    disable_gpg_check: yes
+  ignore_errors: true
+  when: 
+    - nbu_install_status.stat.exists == false
+    - "'master' not in ansible_local.netbackup.domain.role"
+  tags:
+    - nbu_software_install
+
+- name: -> Install NetBackup Server RPM - pddea
+  yum:
+    name:  "{{ nbu_pddea }}"
+    state: present
+    update_cache: true
+    disable_gpg_check: yes
+  ignore_errors: true
+  when: 
+    - nbu_install_status.stat.exists == false
+    - "'master' not in ansible_local.netbackup.domain.role"
+  tags:
+    - nbu_software_install
+
+- name: -> Install NetBackup Server RPM - pddes
+  yum:
+    name:  "{{ nbu_pddes }}"
+    state: present
+    update_cache: true
+    disable_gpg_check: yes
+  ignore_errors: true
+  when: 
+    - nbu_install_status.stat.exists == false
+    - "'media' in ansible_local.netbackup.domain.role"
+    - "'master' not in ansible_local.netbackup.domain.role"
+  tags:
+    - nbu_software_install
+
+- name: -> Install NetBackup Server RPM - pddei
+  yum:
+    name:  "{{ nbu_pddei }}"
+    state: present
+    update_cache: true
+    disable_gpg_check: yes
+  ignore_errors: true
+  when: 
+    - nbu_install_status.stat.exists == false
+    - "'media' in ansible_local.netbackup.domain.role"
+    - "'master' not in ansible_local.netbackup.domain.role"
+  tags:
+    - nbu_software_install
+
+- name: -> Install NetBackup Server RPM - nbcfg
+  yum:
+    name:  "{{ nbu_nbcfg }}"
+    state: present
+    update_cache: true
+    disable_gpg_check: yes
+  ignore_errors: true
+  when: 
+    - nbu_install_status.stat.exists == false
+    - "'master' not in ansible_local.netbackup.domain.role"
+  tags:
+    - nbu_software_install
+
+- name: -> Install NetBackup Server RPM- netbp
+  yum:
+    name:  "{{ nbu_netbp }}"
+    state: present
+    update_cache: true
+    disable_gpg_check: yes
+  ignore_errors: true
+  when: 
+    - nbu_install_status.stat.exists == false
+    - "'media' in ansible_local.netbackup.domain.role"
+    - "'master' not in ansible_local.netbackup.domain.role"
+  tags:
+    - nbu_software_install
+
+# Master Server
+
+- name: -> Install NetBackup Master Server Role
+  shell: expect -f install_master_standalone_rhel.exp
+  args:
+    chdir: "{{ nbu_server_software_dir }}"
+  register: nbu_install
+  when: 
+    - nbu_install_status.stat.exists == false
+    - "'master' in ansible_local.netbackup.domain.role"
+  tags:
+    - nbu_install_master 
+    

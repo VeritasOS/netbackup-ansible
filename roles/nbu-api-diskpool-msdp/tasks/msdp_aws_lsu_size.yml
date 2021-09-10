@@ -1,0 +1,35 @@
+- name: -> Create NetBackup Disk Pool ("MSDP - AWS") - Reduce Cache Size (Testing Purposes)
+  lineinfile:
+    dest: /msdp/db/etc/puredisk/contentrouter.cfg
+    regexp: "{{ item.regexp }}"
+    backrefs: yes
+    line: "{{ item.line }}"
+    create: yes
+  with_items:
+    - { regexp: '^CloudDataCacheSize', line: 'CloudDataCacheSize=1GiB' }          
+    - { regexp: '^CloudMetaCacheSize', line: 'CloudMetaCacheSize=1GiB' }
+  register: cloudcachesize
+  notify: restart_netbackup
+  tags:
+    - nbu_msdp_cloud_create
+    - nbu_msdp_cloud_create_lsusize
+
+- name: -> Flush handlers after enabling enhanced auditing on NetBackup master server to force services restart
+  meta: flush_handlers
+  tags:
+    - nbu_msdp_cloud_create
+    - nbu_msdp_cloud_create_lsusize
+
+- name: -> Check NetBackup is online
+  shell: /usr/openv/netbackup/bin/admincmd/bpdbjobs
+  register: bpdbjobs_result
+  until: bpdbjobs_result.rc == 0
+  changed_when: bpdbjobs_result.rc != 0
+  tags:
+    - nbu_msdp_cloud_create
+    - nbu_msdp_cloud_create_lsusize
+
+
+
+
+

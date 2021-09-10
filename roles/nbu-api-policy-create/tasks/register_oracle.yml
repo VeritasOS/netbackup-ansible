@@ -1,0 +1,21 @@
+- name: -> Check if Oracle instance is known
+  shell: /usr/openv/netbackup/bin/nboraadm -S "{{ nbu_api_hostname }}" -list_instances "{{ ora_instance_name }}" -host "{{ ora_instance_hostname }}"
+  register: check_instance
+  ignore_errors: true
+  tags:
+    - nbu_oracle_register_instance
+
+- name: -> Add and register Oracle instance
+  shell: ( echo "{{ ora_password }}")  |  /usr/openv/netbackup/bin/nboraadm -S "{{ nbu_api_hostname }}" -add_instance "{{ ora_instance_name }}" -host "{{ ora_instance_hostname }}" -os_user "{{ ora_user }}"
+  register: result
+  when: check_instance.rc != 0
+  tags:
+    - nbu_oracle_register_instance
+
+- name: -> Register Oracle instance
+  shell: ( echo "{{ ora_password }}")  |  /usr/openv/netbackup/bin/nboraadm -S "{{ nbu_api_hostname }}" -register_instance "{{ ora_instance_name }}" -host "{{ ora_instance_hostname }}" -os_user "{{ ora_user }}"
+  register: result
+  when: check_instance.rc == 0
+  tags:
+    - nbu_oracle_register_instance
+

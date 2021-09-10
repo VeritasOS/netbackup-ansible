@@ -1,0 +1,39 @@
+- name: -> Create new RBAC role
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/roles
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role1/rbac_role_add.j2') }}"
+    body_format: json
+    status_code: 201, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: rbac_role_create
+  failed_when: rbac_role_create.status not in [201, 409]
+  tags:
+    - get_api_key
+
+- name: -> Get ID of newly created Role
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/roles
+    method: GET
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body_format: json
+    status_code: 201, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: list_of_rbac_roles
+  failed_when: rbac_role_create.status not in [201, 409]
+  tags:
+    - get_api_key
+
+- name: -> Get ID of newly created RBAC
+  set_fact:
+    role_id: "{{ lookup('template', './role1/get_role_id.j2') | trim }}"
+  register: rbac_role_id
+
+
+
+

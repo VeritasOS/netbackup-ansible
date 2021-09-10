@@ -1,0 +1,16 @@
+---
+# defaults file for nbu-api-access-key-new
+
+# API Configuration
+
+nbu_api_hostname: "{{ NBU_MASTER_SERVER }}"
+nbu_api_port: '1556'
+nbu_api_base_url: "{{ 'https://' + nbu_api_hostname + ':' + nbu_api_port + '/netbackup/' }}"
+nbu_api_content_type: application/vnd.netbackup+json;version=5.0;charset=UTF-8
+
+# API key - Configuration Information
+user: <username>
+nbdomaintype: e.g. 'unixpwd'
+nbapikeylife: e.g. P1D
+apikeydesc: e.g. "API key for Automation"
+nbdomain: e.g. ''        # Blank if using master server

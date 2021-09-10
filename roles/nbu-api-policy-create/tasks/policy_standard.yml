@@ -1,0 +1,26 @@
+- name: -> Create backup policy ("Standard")
+  uri:
+    url: https://{{ nbu_api_hostname }}:1556/netbackup/config/policies/
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"     
+    body: "{{ lookup('template', 'policy_standard.j2') }}"
+    body_format: json
+    validate_certs: False
+    status_code:
+      - 204
+      - 400
+      - 401
+      - 409
+      - 415
+      - 500
+      - 501
+  register: result
+  changed_when: result.status != 409
+  failed_when: result.status not in [204, 409]
+  retries: 5
+  delay: 2
+  until:  result.status == 204 or result.status == 409
+  tags:
+  - create_policy_standard

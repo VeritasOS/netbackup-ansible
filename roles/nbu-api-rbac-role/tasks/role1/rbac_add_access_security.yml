@@ -1,0 +1,224 @@
+﻿- name: -> Add Access rights to role - Security - Credentials
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CSECURITY%7CCREDENTIALS%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role1/security/rbac_access_add_security_credentials.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Security - Audit Logs
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CSECURITY%7CAUDIT-LOGS%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role1/security/rbac_access_add_security_audit-logs.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Security - KMS
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CSECURITY%7CKMS%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role1/security/rbac_access_add_security_kms.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Security - Certificate Management - NBU Certificates
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CSECURITY%7CCERTIFICATE-MANAGEMENT%7CNETBACKUP-CERTIFICATES%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role1/security/rbac_access_add_security_cert-mgnt_nbu-certs.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Security - Certificate Management - Tokens
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CSECURITY%7CCERTIFICATE-MANAGEMENT%7CTOKENS%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role1/security/rbac_access_add_security_cert-mgnt_tokens.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Security - Certificate Management - Certificate Authority
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CSECURITY%7CCERTIFICATE-MANAGEMENT%7CCERTIFICATE-AUTHORITIES%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role1/security/rbac_access_add_security_cert-mgnt_ca.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Security - Access Control - Principes
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CSECURITY%7CACCESS-CONTROL%7CPRINCIPALS%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role1/security/rbac_access_add_security_access-control_principles.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Security - Access Control - Roles
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CSECURITY%7CACCESS-CONTROL%7CROLES%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role1/security/rbac_access_add_security_access-control_roles.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Security - Settings
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CSECURITY%7CSETTINGS%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role1/security/rbac_access_add_security_access-control_roles.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Security - Users - API Keys
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CSECURITY%7CUSERS%7CAPI-KEYS%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role1/security/rbac_access_add_security_users_api-keys.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Security - IDP
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CSECURITY%7CIDP%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role1/security/rbac_access_add_security_idp.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Security - Users - Certificate Management
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CSECURITY%7CUSERS%7CCERTIFICATE-MANAGEMENT%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role1/security/rbac_access_add_security_users_cert-mgnt.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Security - Certificate Management - External Certificate Authority
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CSECURITY%7CCERTIFICATE-MANAGEMENT%7CECA%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role1/security/rbac_access_add_security_cert-mgnt_ext-certs.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Security - Users - User Sessions
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CSECURITY%7CUSERS%7CUSER-SESSIONS%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role1/security/rbac_access_add_security_users_user_sessions.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Security - Passphrase Constaints
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CSECURITY%7CPASSPHRASE-CONSTRAINTS%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role1/security/rbac_access_add_security_passphrases.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Security - Trust Versions
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CSECURITY%7CTRUST-VERSIONS%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role1/security/rbac_access_add_security_trust-versions.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+

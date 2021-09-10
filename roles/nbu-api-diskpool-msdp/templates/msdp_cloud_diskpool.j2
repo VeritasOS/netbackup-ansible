@@ -1,0 +1,27 @@
+{
+    "data": {
+        "type": "diskPool",
+        "attributes": {
+            "name": "{{ msdp_cloud_dp_name }}",
+            "diskVolumes": [
+                {
+                    "name": "{{aws_bucket_volume}}"
+                }
+            ],
+            "maximumIoStreams": {
+                "limitIoStreams": true,
+                "streamsPerVolume": "{{ msdp_cloud_dp_io }}"
+            }
+        },
+        "relationships": {
+            "storageServers": {
+                "data": [
+                    {
+                        "type": "storageServer",
+                        "id": "{{ msdp_cloud_dp_id }}"
+                    }
+                ]
+            }
+        }
+    }
+}

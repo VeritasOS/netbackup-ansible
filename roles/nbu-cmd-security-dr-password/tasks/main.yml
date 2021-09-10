@@ -1,0 +1,4 @@
+---
+# tasks file for nbu-api-dr-security
+
+- import_tasks: dr_password.yml

@@ -1,0 +1,20 @@
+---
+# defaults file for nbu-api-provider-vmware-add
+
+# Master Server Hostname
+master_server: "{{ NBU_MASTER_SERVER }}"
+
+# API - Information
+nbu_api_hostname: "{{ master_server }}"
+nbu_api_port: '1556'
+nbu_api_base_url: "{{ 'https://' + nbu_api_hostname + ':' + nbu_api_port + '/netbackup/' }}"
+nbu_api_content_type: application/vnd.netbackup+json;version=5.0;charset=UTF-8
+
+# VMware Provider Information
+nbu_vmware_server: <Hostname or IP Address>
+nbu_vmware_type: VMWARE_VIRTUAL_CENTER_SERVER
+nbu_vmware_username: <Username for vCenter>
+nbu_vmware_password: <Password for vCenter User>
+nbu_vmware_port: 443
+nbu_vmware_validate: True 
+

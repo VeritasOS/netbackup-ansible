@@ -1,0 +1,24 @@
+- name: -> Create NetBackup Disk Pool ("AdvancedDisk - Local") - Disk Pool
+  uri:
+    url: https://{{ nbu_api_hostname }}:1556/netbackup/storage/disk-pools
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_API_KEY }}"     
+    body: "{{ lookup('template', 'adv_create_diskpool.j2') }}"
+    body_format: json
+    validate_certs: False
+    status_code:
+      - 201
+      - 400
+      - 401
+      - 409
+      - 500
+  register: result
+  changed_when: result.status != 409
+  failed_when: result.status not in [201, 409]
+  retries: 5
+  delay: 2
+  until:  result.status == 201 or result.status == 409
+  tags:
+    - nbu_adv_create

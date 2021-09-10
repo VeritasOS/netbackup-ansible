@@ -1,0 +1,18 @@
+---
+# defaults file for nbu-api-plan-vmware-create
+
+# API Configuration
+
+nbu_api_hostname: "{{ NBU_MASTER_SERVER }}"
+nbu_api_port: '1556'
+nbu_api_base_url: "{{ 'https://' + nbu_api_hostname + ':' + nbu_api_port + '/netbackup/' }}"
+nbu_api_content_type: application/vnd.netbackup+json;version=5.0;charset=UTF-8
+
+# Configuration
+
+slo_name: e.g. test_plan_vmware
+slo_type: e.g. VMWARE
+slo_prefix: e.g. test_plan_vmware
+slo_stu: e.g. stu_msdp_local_nbumedia
+slo_workload: e.g. vmware
+slo_client: e.g. nbuclient01

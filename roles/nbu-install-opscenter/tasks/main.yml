@@ -1,0 +1,17 @@
+# tasks file for nbu-deploy-client-opscenter
+
+# Configuration
+
+- include_vars: defaults/opscenter.yml
+  when: ansible_netbackup.domain.role == "opscenter"
+
+# Tasks
+
+# Check the server is compatible
+- import_tasks: t01_check_server.yml
+
+# Install OpsCenter Role
+- import_tasks: t02_install_opscenter.yml
+
+
+

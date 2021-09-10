@@ -1,0 +1,21 @@
+- name: -> Create Baseline NetBackup tuning parameters - Master Server
+  copy:
+    dest: '{{ item.value.dest }}'
+    content: '{{ item.value.setting }}'
+  with_dict: '{{ nbu_tuning_files }}'
+  when: nbu_role == "Master Server"
+
+- name: -> Create Baseline NetBackup tuning parameters - Media Server
+  copy:
+    dest: '{{ item.value.dest }}'
+    content: '{{ item.value.setting }}'
+  with_dict: '{{ nbu_tuning_files }}'
+  when: nbu_role == "Media Server"
+
+- name: -> Create Baseline NetBackup tuning parameters - Client - Linux
+  copy:
+    dest: '{{ item.value.dest }}'
+    content: '{{ item.value.setting }}'
+  with_dict: '{{ nbu_tuning_files }}'
+  when: nbu_role == "Client - Linux"
+

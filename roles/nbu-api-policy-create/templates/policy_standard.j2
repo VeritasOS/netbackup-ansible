@@ -1,0 +1,119 @@
+{
+    "data": {
+        "type": "policy",
+        "id": "{{ nbu_policy_name }}",
+        "attributes": {
+            "policy": {
+                "policyName": "{{ nbu_policy_name }}",
+                "policyType": "Standard",
+                "policyAttributes": {
+                    "active": true,
+                    "autoManagedLabel": null,
+                    "autoManagedType": 0,
+                    "blockIncremental": false,
+                    "dataClassification": null,
+                    "effectiveDateUTC": "1970-01-01T00:00:00Z",
+                    "jobLimit": 2147483647,
+                    "keyword": null,
+                    "mediaOwner": "*ANY*",
+                    "priority": 0,
+                    "storage": "{{ nbu_policy_stu_name }}",
+                    "storageIsSLP": false,
+                    "useMultipleDataStreams": false,
+                    "volumePool": "NetBackup"
+
+
+                },
+                "clients": [
+                    {
+                        "hardware": "{{ nbu_policy_client_hardware }}",
+                        "hostName": "{{ client_name }}",
+                        "OS": "{{ nbu_policy_client_os }}"
+                    }
+                ],
+                "schedules": [
+                    {
+                        "backupCopies": {
+                            "copies": [
+                                {
+                                    "failStrategy": null,
+                                    "mediaOwner": null,
+                                    "retentionPeriod": {
+                                        "value": 2,
+                                        "unit": "WEEKS"
+                                    },
+                                    "storage": null,
+                                    "volumePool": null
+                                }
+                            ],
+                            "priority": -1
+                        },
+                        "backupType": "Full Backup",
+                        "excludeDates": {
+                            "lastDayOfMonth": false,
+                            "recurringDaysOfMonth": [],
+                            "recurringDaysOfWeek": [],
+                            "specificDates": []
+                        },
+                        "frequencySeconds": 604800,
+                        "includeDates": {
+                            "lastDayOfMonth": false,
+                            "recurringDaysOfMonth": [],
+                            "recurringDaysOfWeek": [],
+                            "specificDates": []
+                        },
+                        "mediaMultiplexing": 1,
+                        "retriesAllowedAfterRunDay": false,
+                        "scheduleName": "{{ nbu_policy_sched_name }}",
+                        "scheduleType": "Frequency",
+                        "snapshotOnly": false,
+                        "startWindow": [
+                            {
+                                "dayOfWeek": 1,
+                                "startSeconds": 0,
+                                "durationSeconds": 0
+                            },
+                            {
+                                "dayOfWeek": 2,
+                                "startSeconds": 0,
+                                "durationSeconds": 0
+                            },
+                            {
+                                "dayOfWeek": 3,
+                                "startSeconds": 0,
+                                "durationSeconds": 0
+                            },
+                            {
+                                "dayOfWeek": 4,
+                                "startSeconds": 0,
+                                "durationSeconds": 0
+                            },
+                            {
+                                "dayOfWeek": 5,
+                                "startSeconds": 0,
+                                "durationSeconds": 0
+                            },
+                            {
+                                "dayOfWeek": 6,
+                                "startSeconds": 0,
+                                "durationSeconds": 0
+                            },
+                            {
+                                "dayOfWeek": 7,
+                                "startSeconds": 0,
+                                "durationSeconds": 0
+                            }
+                        ],
+                        "storageIsSLP": false,
+                        "syntheticBackup": false
+                    }
+                ],
+                "backupSelections": {
+                    "selections": [
+                        "{{ backup_selection }}"
+                    ]
+                }
+            }
+        }
+    }
+}

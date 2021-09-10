@@ -1,0 +1,254 @@
+- name: -> Check if NetBackup has already been installed - Chk1
+  stat:
+    path: /usr/openv/netbackup/bp.conf
+  register: nbu_install_status
+  tags:
+    - nbu_install_pre
+    - nbu_install_pre_check
+
+- name: -> Download and extract the NetBackup Server software into /tmp
+  unarchive:
+    src: '{{ nbu_server_software_file }}'
+    dest: /tmp
+    remote_src: yes
+    creates: '{{ nbu_server_software_dir }}'
+  when: 
+    - nbu_install_status.stat.exists == false
+    - "'master' in ansible_local.netbackup.domain.role"
+  tags:
+    - nbu_install_pre
+    - nbu_install_pre_getsoftware
+
+- name: -> Upload NetBackup SmartMeter Key
+  copy:
+    src: "veritas_customer_registration_key.json"
+    dest: "{{ nbu_server_software_dir }}"
+  when: 
+    - nbu_install_status.stat.exists == false
+    - "'master' in ansible_local.netbackup.domain.role"
+  tags:
+    - nbu_install_pre
+    - nbu_install_pre_smartmeter
+
+- name: -> Upload NBInstallAnswer file for NetBackup Master Server Installation
+  template:
+    src: NBInstallAnswer-master.j2
+    dest: "/tmp/NBInstallAnswer.conf"
+    mode: 0755
+  when: 
+    - nbu_install_status.stat.exists == false
+    - "'master' in ansible_local.netbackup.domain.role"
+  tags:
+    - nbu_install_pre
+    - nbu_install_pre_ansfile
+
+- name: -> Upload Installation expect script for NetBackup Master Server Installation
+  template:
+    src: 'install_master_standalone_rhel.j2'
+    dest: "{{ nbu_server_software_dir }}/install_master_standalone_rhel.exp"
+    mode: 0755
+  when: 
+    - nbu_install_status.stat.exists == false
+    - "'master' in ansible_local.netbackup.domain.role"
+  tags:
+    - nbu_install_pre
+    - nbu_install_pre_installscript
+
+# Add Media Server as SERVER entry in bp.conf on master server
+- name: NetBackup -> Add Server entry to bp.conf
+  shell:
+    cmd: |
+        /usr/openv/netbackup/bin/admincmd/bpgetconfig SERVER MEDIA_SERVER |awk '{if($3!="{{ nbu_media_short }}"&&$3!="{{ nbu_media_fqdn }}") {print $0} }' |awk 'END{print "SERVER = {{ nbu_media_short }}"}{print $0}' |awk 'END{print "MEDIA_SERVER = {{ nbu_media_short }}"}{print $0}'  |awk 'END{print "SERVER = {{ nbu_media_fqdn }}"}{print $0}' |awk 'END{print "MEDIA_SERVER = {{ nbu_media_fqdn }}"}{print $0}' |/usr/openv/netbackup/bin/admincmd/bpsetconfig
+  delegate_to: "{{ master_server }}"
+  when: 
+    - nbu_install_status.stat.exists == false
+    - "'media' in ansible_local.netbackup.domain.role"
+  tags:
+    - nbu_install_pre
+    - nbu_install_pre_installscript
+
+
+# Get Authorisation Token
+
+- name: -> Get NetBackup API authorisation token
+  uri:
+    url: "{{ base_api_url + 'login' }}"
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_content_type }}"
+    body:
+      domainName: "{{ master_server }}"
+      domainType: "unixpwd"
+      userName: "{{ nbu_admin_user }}"
+      password: "{{ nbu_admin_password }}"
+    body_format: json
+    status_code: 201, 401
+    validate_certs: no
+  register: task_nbu_get_auth_token_result
+  retries: 5
+  delay: 2
+  until:  task_nbu_get_auth_token_result.status == 201
+  when: "'master' not in ansible_local.netbackup.domain.role"
+  tags:
+    - server_nbu_prep
+    - server_nbu_prep_authtoken
+    - server_nbu_prep_cacert
+
+# Get host token from master server # Need HOSTID
+
+- name: -> Get list of existing hosts
+  uri:
+    url: https://{{ master_server }}:1556/netbackup/config/hosts
+    method: GET
+    headers:
+      Content-Type: "{{ nbu_content_type }}"
+      Authorization: "{{ task_nbu_get_auth_token_result.json.token }}"     
+    status_code:
+      - 200
+    validate_certs: no
+  register: host_list
+  when: "'master' not in ansible_local.netbackup.domain.role"
+  tags:
+    - server_nbu_prep
+    - server_nbu_prep_authtoken
+
+- name: -> Find host mapping for existing server
+  set_fact:
+    host_check: "{{ item.0.uuid }}"
+  with_subelements: 
+    - "{{ host_list.json.hosts }}"
+    - hostMappings
+  when: 
+    - "'master' not in ansible_local.netbackup.domain.role"
+    - item.1.mappedHostName == inventory_hostname
+  tags:
+    - server_nbu_prep
+    - server_nbu_prep_authtoken
+
+- name: -> Cleans all invalid authorization tokens
+  uri:
+    url: https://{{ master_server }}:1556/netbackup/security/securitytokens/delete/invalid
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_content_type }}"
+      Authorization: "{{ task_nbu_get_auth_token_result.json.token }}"      
+    body: '{
+             "reason": "Ansible cleanup"
+           }'
+    body_format: json
+    validate_certs: no
+    status_code:
+      - 204
+  when: "'master' not in ansible_local.netbackup.domain.role"
+  tags:
+    - server_nbu_prep
+    - server_nbu_prep_authtoken
+
+- name: -> Set randon string as the Token Name
+  set_fact:
+    token_name: "TKN{{ lookup('password', '/dev/null length=15 chars=ascii_letters') }}"
+  when: "'master' not in ansible_local.netbackup.domain.role"
+  tags:
+    - server_nbu_prep
+    - server_nbu_prep_authtoken
+
+- name: -> Create reissue token for host
+  uri:
+    url: https://{{ master_server }}:1556/netbackup/security/securitytokens
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_content_type }}"
+      Authorization: "{{ task_nbu_get_auth_token_result.json.token }}"      
+    body: '{ 
+             "tokenName": "{{ token_name }}",
+             "hostId": "{{ host_check }}",
+             "validFor": 3600, 
+             "allowedCount": 1 
+           }'
+    body_format: json
+    validate_certs: no
+    status_code:
+      - 201
+  register: token
+  tags:
+    - server_nbu_prep
+    - server_nbu_prep_authtoken
+  when:
+    - host_check is defined
+    - "'master' not in ansible_local.netbackup.domain.role"
+
+- name: -> Set reissue authorisation token result as Fact
+  set_fact:
+    auth_token: "{{ token.json.tokenValue }}"
+  tags:
+    - server_nbu_prep
+    - server_nbu_prep_authtoken
+  when:
+    - host_check is defined
+    - "'master' not in ansible_local.netbackup.domain.role"
+
+- name: -> Create reissue token for host 
+  uri:
+    url: https://{{ master_server }}:1556/netbackup/security/securitytokens
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_content_type }}"
+      Authorization: "{{ task_nbu_get_auth_token_result.json.token }}"      
+    body: '{ 
+             "tokenName": "{{ token_name }}",
+             "validFor": 3600, 
+             "allowedCount": 1 
+           }'
+    body_format: json
+    validate_certs: no
+    status_code:
+      - 201
+  register: token
+  tags:
+    - server_nbu_prep
+    - server_nbu_prep_authtoken
+  when:
+    - host_check is undefined
+    - "'master' not in ansible_local.netbackup.domain.role"
+
+- name: -> Set token for host as Fact
+  set_fact:
+    auth_token: "{{ token.json.tokenValue }}"
+  tags:
+    - server_nbu_prep
+    - server_nbu_prep_authtoken
+  when:
+    - host_check is undefined
+    - "'master' not in ansible_local.netbackup.domain.role"
+
+# Get Master Server CA Fingerprint
+
+- name: -> Get NBU CA fingerprint
+  uri:
+    url: https://{{ master_server }}:1556/netbackup/security/certificate-authorities?page%5Bdisable%5D=true
+    method: GET
+    headers:
+      Content-Type: "{{ nbu_content_type }}"
+      Authorization: "{{ task_nbu_get_auth_token_result.json.token }}"     
+    status_code:
+      - 200
+    validate_certs: no
+  register: ca_fprint
+  when: "'master' not in ansible_local.netbackup.domain.role"
+  tags:
+    - server_nbu_prep
+    - server_nbu_prep_cacert
+
+- name: -> Set Master CA Certificate fingerprint as Fact
+  set_fact:
+    master_ca_cert: "{{ item.attributes.nbcaCertDetails.fingerprint }}"
+  with_items: "{{ ca_fprint.json.data }}"
+  when: 
+    - "'master' not in ansible_local.netbackup.domain.role"
+    - item.attributes.nbcaCertDetails.state == "ACTIVE"
+  tags:
+    - server_nbu_prep
+    - server_nbu_prep_cacert
+
+
+#

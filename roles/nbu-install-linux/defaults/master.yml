@@ -1,0 +1,43 @@
+# Server - Min Reqirements
+server_cpu: 2
+server_ram: 4000
+
+# Server - Disk Mountpoints
+server_mounts:
+  mount1:
+    path: '/usr/openv'
+    min_size: 50
+    description: 'NetBackup Binaries'
+  mount2:
+    path: '/usr/openv/netbackup/db'
+    min_size: 100
+    description: 'NetBackup Database'
+
+# OS Packages
+os_config_packages:
+  - expect
+
+# OS Packages
+pip_config_packages:
+  - pexpect
+
+# RHEL 8 requires libnsl
+os_config_packages_rhel8:
+  - libnsl
+
+# Linux OS - Firwalld
+os_config_firewalld:
+  - 111/tcp
+  - 443/tcp
+  - 867/tcp
+  - 902/tcp
+  - 1556/tcp
+  - 2049/tcp
+  - 10102/tcp
+  - 10082/tcp
+  - 13782/tcp
+  - 13724/tcp
+  - 13783/tcp
+  - 13722/tcp
+  - 20048/tcp
+

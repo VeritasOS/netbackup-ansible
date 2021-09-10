@@ -1,0 +1,247 @@
+# This answer file template contains values that may be used for unattended/silent
+# installs and upgrades of media servers. To utilize this template, create a copy
+# at /tmp/NBInstallAnswer.conf and set environment-specific values for the required
+# options. The other options may be set or removed as needed.  Unused options
+# should be removed from the file.  Default values will be used for options that
+# are not present in the file.
+#
+# Host names that are provided for any these options must be resolvable.
+# It is best practice to use fully-qualified domain names.
+#
+# Do not attempt to change existing configuration settings via this file during
+# upgrades.  Attempting to do so may result in ignored specifications or failed
+# upgrades.
+#
+# The primary use of this file is with native installs and upgrades.  The NetBackup
+# install script may honor specific documented options.
+
+CLIENT_NAME = XLOCALHOSTX
+#    Description: This option specifies the name that NetBackup uses to identify
+#                 this machine. The XLOCALHOSTX value lets the local host provide
+#                 the machine name. If this value is used, it may be possible to use
+#                 the same answer file on all machines within a single master server
+#                 domain. This value is added to the bp.conf file.
+#    Default value: N/A
+#    Required for initial install: Yes
+#    Required for upgrade: If provided, the value must match the current value
+#                          stored in the CLIENT_NAME field in bp.conf.
+
+MACHINE_ROLE = CLIENT
+#    Description: This option specifies the NetBackup role to install and configure
+#                 on this machine.
+#    Default value: N/A
+#    Required for initial install: Yes
+#    Required for upgrade: If provided, this value must match the configured
+#                          role on the machine.
+
+SERVER = {{ master_server }}
+#    Description: This option specifies the server name this machine recognizes as
+#                 the current NetBackup master server.  Additional SERVER= lines may
+#                 be added if there are other servers that should be recognized.
+#                 In the case where multiple SERVER= lines are present, the first
+#                 occurrence is the master server.  These entries are added to the
+#                 bp.conf file.
+#    Default value: N/A
+#    Required for initial install: Yes
+#    Required for upgrade: If provided, this value must match the first SERVER
+#                          entry in bp.conf.
+
+INSTALL_PATH = /usr
+#    Description: This option specifies the location to install the NetBackup binaries.
+#                 Only the absolute path to a base directory is required for this option.
+#                 The installer will automatically append /openv.
+#    Default Value: /usr
+#    Required for initial install: No
+#    Required for upgrade: This option will be ignored.  The install path cannot be
+#                          changed during an upgrade.
+
+SERVICES = yes
+#    Description: This option specifies whether NetBackup services should be started upon
+#                 completion of the client installation or upgrade.  If no is specified,
+#                 the NetBackup services are not started. Additional manual configuration
+#                 steps may be performed after the install or upgrade but before the
+#                 NetBackup services are started.
+#    Default Value: yes
+#    Required for initial install: No
+#    Required for upgrade: No
+
+MERGE_SERVERS_LIST = yes
+#    Description: Merge the servers present in bp.conf on the master with the server list
+#                 contained in this client's bp.conf.
+#    Default Value: no
+#    Required for initial install: No
+#    Required for upgrade: No
+
+INCLUDE_JAVA_GUI_AND_JRE = MATCH
+#    Description: Installation of the NetBackup Java GUI and JRE packages is now optional.
+#                 This option specifies whether the Java GUI and JRE packages should be
+#                 installed, upgraded, or removed.
+#                 The supported values are:
+#                     MATCH   = Match the existing configuration on the host.  Specifying
+#                               this value for an initial install will not install these
+#                               packages.
+#                     INCLUDE = Include the Java GUI and JRE packages when installing or
+#                               upgrading NetBackup.
+#                     EXCLUDE = Exclude the Java GUI and JRE packages when installing or
+#                               upgrading NetBackup.  Any preexisting NetBackup Java GUI
+#                               and JRE packages will be removed.
+#    Default Value: N/A
+#    Required for initial install: No
+#    Required for upgrade: No
+
+# Security configuration: If this is an initial installation or an upgrade from pre-NetBackup
+#                         8.0, at least one set of security configuration parameters (NBCA or
+#                         ECA) must be provided.
+#
+#                         If the master server is using a NetBackup certificate authority (NBCA)
+#                         only, this host must also use NBCA. In this case, the
+#                         CA_CERTIFICATE_FINGERPRINT of the master server must be provided.
+#                         An AUTHORIZATION_TOKEN may also be required depending on the
+#                         security level configured on the master server or whether this
+#                         machine is already configured on the master.  For more information
+#                         refer to:
+#                         https://www.veritas.com/support/en_US/article.000127129.
+#
+#                         If the master server is using an external certificate authority (ECA),
+#                         or if the master server is using both NBCA and ECA, this host must
+#                         use ECA. In this case the ECA_CERT_PATH, ECA_CRL_CHECK_LEVEL,
+#                         ECA_PRIVATE_KEY_PATH, and ECA_TRUST_STORE_PATH values are required.
+#                         The ECA_CRL_PATH is required only when ECA_CRL_CHECK_LEVEL=USE_PATH.
+#                         The ECA_KEY_PASSPHRASEFILE value is optional.
+#                         For more information, refer to:
+#                         https://www.veritas.com/support/en_US/article.100044300.
+#
+#                         If this is an initial install or an upgrade from NetBackup 8.0
+#                         or later security may already be set correctly.  If the master
+#                         server is using only NBCA or only ECA, and the media server is
+#                         already configured to use those methods, the security options
+#                         are not required and will be ignored if provided.  If the master
+#                         server is using ECA and the media server is not, ECA options
+#                         must be provided.
+
+CA_CERTIFICATE_FINGERPRINT = {{ master_ca_cert }}
+#    Description: Applicable only if the master server is using only a NetBackup certificate
+#                 authority, and not an external certificate authority.
+#                 This option specifies the Certificate Authority (CA) Certificate Fingerprint.
+#                 The Certificate Fingerprint is retrieved from the CA during installation or
+#                 upgrade. The fingerprint format is 59 characters and is a combination of the
+#                 digits 0-9, the letters A-F, and colons (for example,
+#                 01:23:45:67:89:AB:CD:EF:01:23:45:67:89:AB:CD:EF:01:23:45:67). The fingerprint
+#                 value must match the fingerprint for the server value that is specified in
+#                 the first SERVER=server_name option. Set this to SKIP to continue the
+#                 installation or upgrade without configuring the host to use a NetBackup
+#                 certificate authority.
+#    Default Value: N/A
+#    Required for initial install: See Security configuration note above.
+#    Required for upgrade: See Security configuration note above.
+
+AUTHORIZATION_TOKEN = {{ auth_token }}
+#    Description: Applicable only if the master server is using only a NetBackup certificate
+#                 authority, and not an external certificate authority.
+#                 This option specifies that NetBackup should use an authorization or a
+#                 reissue token when retrieving the host certificate. The AUTHORIZATION_TOKEN
+#                 is 16 upper case letters. Some environments require an authorization token
+#                 for backups and restores to work correctly. If this information is required
+#                 and is not provided in the answer file, the installation will fail. If SKIP
+#                 is specified, the installer attempts to retrieve a host certificate without
+#                 including a token. In some environments this may result in additional manual
+#                 steps following the installation.
+#    Default Value: N/A
+#    Required for initial install: See Security configuration note above.
+#    Required for upgrade: See Security configuration note above.
+
+#ECA_CERT_PATH = <path_and_file_name> | SKIP
+#    Description: Applicable only if the master server is using an external certificate
+#                 authority.
+#                 This option specifies the path and the file name of the external certificate
+#                 file. Set this and all ECA properties to SKIP to continue installation or
+#                 upgrade without configuring the host to use an external certificate authority.
+#    Default Value: N/A
+#    Required for initial install: See Security configuration note above.
+#    Required for upgrade: See Security configuration note above.
+
+#ECA_PRIVATE_KEY_PATH = <path_and_file_name> | SKIP
+#    Description: Applicable only if the master server is using an external certificate
+#                 authority.
+#                 This option specifies the path and the file name of the file representing the
+#                 private key. Set this and all ECA properties to SKIP to continue installation
+#                 or upgrade without configuring the host to use an external certificate
+#                 authority.
+#    Default Value: N/A
+#    Required for initial install: See Security configuration note above.
+#    Required for upgrade: See Security configuration note above.
+
+#ECA_TRUST_STORE_PATH = <path_and_file_name> | SKIP
+#    Description: Applicable only if the master server is using an external certificate
+#                 authority.
+#                 This option specifies the path and the file name of the file representing the
+#                 trust store location. Set this and all ECA properties to SKIP to continue
+#                 installation or upgrade without configuring the host to use an external
+#                 certificate authority.
+#    Default Value: N/A
+#    Required for initial install: See Security configuration note above.
+#    Required for upgrade: See Security configuration note above.
+
+#ECA_CRL_CHECK_LEVEL = <value>
+#    Description: Applicable only if the master server is using an external certificate
+#                 authority.
+#                 This option specifies the CRL mode. Supported values are:
+#                 USE_CDP: Use the CRL defined in the certificate.
+#                 USE_PATH: Use the CRL at the path that is specified in ECA_CRL_PATH.
+#                 DISABLED: Do not use a CRL.
+#                 SKIP: Set this and all ECA properties to SKIP to continue installation
+#                       or upgrade without configuring the host to use an external
+#                       certificate authority.
+#    Default Value: N/A
+#    Required for initial install: See Security configuration note above.
+#    Required for upgrade: See Security configuration note above.
+
+#ECA_CRL_PATH = <path_and_file_name> | SKIP
+#    Description: Applicable only if the master server is using an external certificate
+#                 authority.
+#                 This option specifies the path and the file name of the CRL associated with
+#                 the external CA certificate. Set this and all ECA properties to SKIP to
+#                 continue installation or upgrade without configuring the host to use an
+#                 external certificate authority.
+#    Default Value: N/A
+#    Required for initial install: Only when ECA_CRL_CHECK_LEVEL=USE_PATH
+#    Required for upgrade: Only when ECA_CRL_CHECK_LEVEL=USE_PATH
+
+#ECA_KEY_PASSPHRASEFILE = <path_and_file_name> | SKIP
+#    Description: Applicable only if the master server is using an external certificate
+#                 authority.
+#                 This option specifies the path and the file name of the file that contains
+#                 the passphrase to access the keystore. Set this and all ECA properties to
+#                 SKIP to continue installation or upgrade without configuring the host to use
+#                 an external certificate authority.
+#    Default Value: N/A
+#    Required for initial install: No
+#    Required for upgrade: No
+
+{% for media_server in groups['media'] %}
+MEDIA_SERVER = {{ media_server }}
+{% endfor %}
+
+#    Description: This option specifies that NetBackup may use the named host to tunnel secure
+#                 web requests for this client. A tunnel is required when communication between
+#                 the client and the NetBackup Web Service on the master server is blocked. This
+#                 communication is required to obtain a host certificate during the NetBackup
+#                 installation or upgrade. Multiple MEDIA_SERVER entries may exist in the answer
+#                 file. Each one is used as a candidate to tunnel https requests. These entries
+#                 are added to the bp.conf file.
+#    Default Value: N/A
+#    Required for initial install: No
+#    Required for upgrade: Honored if provided
+#  Not set as Media Server list will be obtained from Master Server on initial install
+
+ACCEPT_REVERSE_CONNECTION = FALSE
+#    Description: This option specifies that NetBackup may use the reverse connection in case
+#                 of a Dynamic network address translation (DNAT) environment. This entry is
+#                 added to the bp.conf file.
+#    Warning: You must not set the ACCEPT_REVERSE_CONNECTION configuration option to TRUE in
+#             the following scenarios:
+#             . If you do not have a Dynamic network address translation (DNAT) setup.
+#             . If NetBackup clients are not behind the firewall.
+#    Default Value: FALSE
+#    Required for initial install: Only when installing in a DNAT environment.
+#    Required for upgrade: Only when upgrading in a DNAT environment.

@@ -1,0 +1,7 @@
+
+# Software Package
+opscenter_pkg: OpsCenter_9.1_Win.zip
+opscenter_dir: "{{ opscenter_pkg.split('.zip')[0] }}"
+
+# Software
+nbu_software_opscenter: http://admin:AKCp8ii9GNyUAQr372AYFHgQSCDZZgUecNEEpkuzYP7NyNaxUhvR28in6roymqmgMg1pGce4c@10.15.200.41:8082/artifactory/Veritas/NetBackup/BETA/9100/Server/Windows/OpsCenter_9.1_Win.zip

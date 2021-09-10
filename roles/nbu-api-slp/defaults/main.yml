@@ -1,0 +1,24 @@
+---
+# defaults file for nbu-api-slp-create
+
+# Master Server Hostname
+master_server: "{{ NBU_MASTER_SERVER }}"
+
+# API - Information
+nbu_api_hostname: "{{ master_server }}"
+nbu_api_port: '1556'
+nbu_api_base_url: "{{ 'https://' + nbu_api_hostname + ':' + nbu_api_port + '/netbackup/' }}"
+nbu_api_content_type: application/vnd.netbackup+json;version=5.0;charset=UTF-8
+
+# SLP - Configuration Information 
+slp_name: e.g. slp_local_to_cloud_nbumedia
+slp_step1_type: e.g. BACKUP
+slp_step1_unit: e.g. WEEKS
+slp_step1_value: e.g. 1
+slp_step1_stu: e.g. stu_msdp_local_nbumedia
+slp_step2_type: e.g. DUPLICATE
+slp_step2_unit: e.g. WEEKS
+slp_step2_value: e.g. 2
+slp_step2_stu: e.g. stu_msdp_cloud_aws_nbumedia
+
+

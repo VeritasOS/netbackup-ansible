@@ -1,0 +1,8 @@
+nbu_tuning_files:
+  file1:
+    dest:  /usr/openv/netbackup/NET_BUFFER_SZ
+    setting: 0
+    state: 
+  file2:
+    dest:  /usr/openv/netbackup/NET_BUFFER_SZ_REST
+    setting: 0

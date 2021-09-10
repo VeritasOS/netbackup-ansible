@@ -1,0 +1,31 @@
+{
+    "data": {
+        "type": "diskPool",
+        "attributes": {
+            "name": "{{ adv_local_dp_name }}",
+            "comment": "",
+            "diskVolumes": [
+                {
+                    "name": "{{ adv_local_dp_path }}"
+                }
+            ],
+            "highWaterMark": 90,
+            "lowWaterMark": 80,
+            "maximumIoStreams": {
+                "limitIoStreams": true,
+                "streamsPerVolume": "{{ adv_local_dp_io }}"
+            }
+        },
+        "relationships": {
+            "storageServers": {
+                "data": [
+                    {
+                        "type": "storageServer",
+                        "id": "{{ adv_local_dp_id }}"
+                    }
+                ]
+            }
+        }
+    }
+}
+

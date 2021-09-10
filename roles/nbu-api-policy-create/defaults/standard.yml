@@ -1,0 +1,16 @@
+#### Standard Policy ####
+
+# Policy Attributes
+nbu_policy_name: <policy_name>
+nbu_policy_stu_name: <policy_slp>
+nbu_policy_sched_name: <policy_schedule>
+
+# Client Information 
+nbu_policy_client_name: <Policy_client>
+nbu_policy_client_os: RedHat2.6.32
+nbu_policy_client_hardware: Linux
+
+# Backup Selections
+nbu_policy_selection: <Policy Backup Selection>
+
+

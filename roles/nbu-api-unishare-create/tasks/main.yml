@@ -1,0 +1,6 @@
+---
+# tasks file for nbu-api-unishare-create
+
+- import_tasks: create_us.yml
+- import_tasks: get_us_id.yml
+- import_tasks: mount_share.yml

@@ -1,0 +1,18 @@
+
+- name: -> Create NetBackup Storage Lifecycle Policy(s)
+  uri:
+    url: https://{{ nbu_api_hostname }}:1556/netbackup/config/slps
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_API_KEY }}"      
+    body: "{{ lookup('template', 'slp_create.j2') }}"
+    body_format: json
+    status_code: 201, 400, 401, 409, 415, 500, 7427
+    validate_certs: no
+  register: result
+  failed_when: result.status not in [201, 409]
+  changed_when: result.status != 409
+  tags:
+    - nbu_api_slp_create
+

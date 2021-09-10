@@ -1,0 +1,22 @@
+---
+# vars file for nbu-api-restore-vmware-full
+
+# Restore Information
+nbu_vm_hostname: <source_vmname>
+nbu_vm_hostname_recovered: <recovered_vmname>
+nbu_vm_datastore_source: <path for source datastore>
+nbu_vm_datastore_target: <path for target datastore>
+
+# vCenter Information
+vcenter_hostname: vCenter host to recover to
+vcenter_esxhostname: ESX host to recover to
+vcenter_datacenter: Datacenter to recover to
+vcenter_vmfolder: VM folder to recover to
+vcenter_resourcepool: Resource Pool to recover to
+vcenter_datatore: <source_datastore>
+vcenter_tmpdatastore: <target_datastore>
+vcenter_network: <network>
+
+# Recovery Options
+nbu_recoveryhost: <media_server>
+nbu_mediaserver: <media_server>

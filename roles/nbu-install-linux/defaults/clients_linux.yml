@@ -1,0 +1,19 @@
+# Server - Min Reqirements
+server_cpu: 1
+server_ram: 1024
+
+# Server - Disk Mountpoints
+server_mounts:
+  mount1:
+    path: '/'
+    min_size: 10
+    description: 'NetBackup Binaries'
+
+# Linux OS - Firwalld
+os_config_firewalld:
+  - 1556/tcp
+  - 10102/tcp
+  - 10082/tcp
+  - 13782/tcp
+  - 13724/tcp
+

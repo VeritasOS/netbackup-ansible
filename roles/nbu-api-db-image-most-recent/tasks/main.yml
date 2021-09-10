@@ -1,0 +1,4 @@
+---
+# tasks file for nbu-api-db-image-most-recent
+
+- import_tasks: get_most_recent_image.yml

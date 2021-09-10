@@ -1,0 +1,4 @@
+---
+# tasks file for nbu-api-policy-backup-run
+
+- import_tasks: run_manual_backup.yml

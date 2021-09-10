@@ -1,0 +1,24 @@
+{
+    "data": {
+        "type": "storageServer",
+        "attributes": {
+            "name": "{{ msdp_local_ss_hostname }}",
+            "storageCategory": "MSDP",
+            "mediaServerDetails": {
+                "name": "{{ msdp_local_ss_hostname }}"
+            },
+            "encryptionEnabled": "{{ msdp_local_ss_encryption }}",
+            "kmsEnabled": "{{ msdp_local_ss_kmsenabled }}",
+            "kmsKeyGroupName": "{{ msdp_local_ss_kmskeygroup }}",
+            "msdpAttributes": {
+                "storagePath": "{{ msdp_local_ss_dir_db}}",
+                "deduplicationDBPath": "{{ msdp_local_ss_dir_data }}",
+                "credentials": {
+                    "userName": "{{ msdp_local_ss_username }}",
+                    "password": "{{ msdp_local_ss_password }}"
+                }
+            }
+        }
+    }
+
+}

@@ -1,0 +1,30 @@
+---
+# tasks file for nbu-api-provider-vmware-add
+
+# Configure VMware server in NetBackup
+
+- name: NetBackup -> Add credentials for VMware vCenter Server
+  uri:
+    url: "{{ nbu_api_base_url + 'config/servers/vmservers' }}"
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_API_KEY }}"
+    body: "{{ lookup('template', 'add_vcenter.j2') }}"
+    body_format: json
+    validate_certs: False
+    status_code:
+      - 201
+      - 400
+      - 401
+      - 409
+      - 415
+      - 500
+  register: set_vcenter_server_creds
+  changed_when: set_vcenter_server_creds.status != 409
+  failed_when: set_vcenter_server_creds.status not in [201, 409]
+  retries: 5
+  delay: 2
+  until:  set_vcenter_server_creds.status == 201 or set_vcenter_server_creds.status == 409
+  tags:
+    - add_vcenter_server

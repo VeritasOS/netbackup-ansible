@@ -1,0 +1,27 @@
+- name: -> Get local user information
+  shell: id -u "{{ nbu_user }}"
+  register: user_information
+
+- name: -> Set local information as fact
+  set_fact:
+    rbac_user_id: "{{ user_information.stdout }}"
+
+- debug:
+    msg: "{{ rbac_user_id }}"
+
+- name: -> Add User to newly created role
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/roles/{{ role_id }}/relationships/user-principals
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role1/rbac_user_add.j2') }}"
+    body_format: json
+    status_code: 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  failed_when: rbac_role_create.status not in [204, 409]
+  ignore_errors: true
+
+

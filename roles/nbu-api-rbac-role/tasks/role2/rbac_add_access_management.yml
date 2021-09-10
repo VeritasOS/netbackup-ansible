@@ -1,0 +1,419 @@
+﻿- name: -> Add Access rights to role - Management - Snapshot Plugins
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CMANAGE%7CSNAPSHOT-MGMT-SERVER-PLUGINS%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role2/management/rbac_access_add_manage_snap_plugin.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Management - Events & Logs
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CMANAGE%7CEVENTLOGS%7CMESSAGES%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role2/management/rbac_access_add_manage_logs_events.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Management - Eventlogs & Notifications
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CMANAGE%7CEVENTLOGS%7CNOTIFICATIONS%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role2/management/rbac_access_add_manage_logs_notifications.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Management - Hosts
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CMANAGE%7CHOSTS%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role2/management/rbac_access_add_manage_hosts.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Management - Data Classifications
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CMANAGE%7CDATA-CLASSIFICATIONS%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role2/management/rbac_access_add_manage_data_classifications.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Management - Image Sharing - AMI
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CMANAGE%7CIMAGE-SHARE%7CAMI-IDS%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role2/management/rbac_access_add_manage_image_ami.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Management - Host - Host Properties
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CMANAGE%7CHOSTS%7CHOST-PROPERTIES%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role2/management/rbac_access_add_manage_host_properties.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Management - CDP - Gateway
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CMANAGE%7CHOSTS%7CCDP-GATEWAY%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role2/management/rbac_access_add_manage_cdp_gateway.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Management - Jobs
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CMANAGE%7CJOBS%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role2/management/rbac_access_add_manage_jobs.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Management - Images
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CMANAGE%7CIMAGES%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role2/management/rbac_access_add_manage_images.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Management - Image Sharing - Cloud VM ID
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CMANAGE%7CIMAGE-SHARE%7CCLOUD-VM-IDS%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role2/management/rbac_access_add_manage_image_sharing_cloudvm.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Management - Image Sharing - Cloud Images
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CMANAGE%7CIMAGE-SHARE%7CCLOUD-IMAGES%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role2/management/rbac_access_add_manage_image_sharing_cloud_images.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Management - Resiliency - Domain
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CMANAGE%7CRESILIENCY%7CDOMAIN%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role2/management/rbac_access_add_manage_resiliency_domain.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Management - Remote Master Server
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CMANAGE%7CREMOTE-MASTER-SERVER-CA-CERTIFICATES%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role2/management/rbac_access_add_manage_remote_master_ca.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Management - Media Servers
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CMANAGE%7CMEDIA-SERVERS%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role2/management/rbac_access_add_manage_media_servers.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Management - Licensing
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CMANAGE%7CLICENSING%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role2/management/rbac_access_add_manage_licensing.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Management - Agentless Hosts
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CMANAGE%7CAGENTLESSHOSTS%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role2/management/rbac_access_add_manage_agentless_hosts.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Management - Retention Levels
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CMANAGE%7CRETENTION-LEVELS%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role2/management/rbac_access_add_manage_retention_levels.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Management - Access Hosts
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CMANAGE%7CACCESSHOSTS%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role2/management/rbac_access_add_manage_access_hosts.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Management - Resource Limits
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CMANAGE%7CRESOURCELIMITS%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role2/management/rbac_access_add_manage_resource_limits.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Management - Snapshot Plugin - Azure
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CMANAGE%7CSNAPSHOT-MGMT-SERVER-PLUGINS%7CAZURE%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role2/management/rbac_access_add_manage_snap_plugin_azure.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Management - Snapshot Plugin - AzureStack
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CMANAGE%7CSNAPSHOT-MGMT-SERVER-PLUGINS%7CAZURE%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role2/management/rbac_access_add_manage_snap_plugin_azurestack.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Management - Snapshot Plugin - AzureStack
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CMANAGE%7CSNAPSHOT-MGMT-SERVER-PLUGINS%7CAZURESTACK%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role2/management/rbac_access_add_manage_snap_plugin_azurestack.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Management - Snapshot Plugin - AWS
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CMANAGE%7CSNAPSHOT-MGMT-SERVER-PLUGINS%7CAWS%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role2/management/rbac_access_add_manage_snap_plugin_aws.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Management - Servers - Trusted Master Servers
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CMANAGE%7CSERVERS%7CTRUSTED-MASTER-SERVERS%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role2/management/rbac_access_add_manage_trusted_master_servers.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Management - WSS Enpoints
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CMANAGE%7CWSSENDPOINTS%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role2/management/rbac_access_add_manage_wssendpoints.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Management - Snapshot Management Servers
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CMANAGE%7CSNAPSHOT-MGMT-SERVER%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role2/management/rbac_access_add_manage_snapshot_mgnt_servers.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Management - Snapshot Plugin - GCP
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CMANAGE%7CSNAPSHOT-MGMT-SERVER-PLUGINS%7CGCP%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role2/management/rbac_access_add_manage_snap_plugin_gcp.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Management - Anomalies
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CMANAGE%7CANOMALIES%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role2/management/rbac_access_add_manage_anomalies.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true
+
+- name: -> Add Access rights to role - Management - Email Notification
+  uri:
+    url: https://{{ nbu_api_hostname}}:1556/netbackup/access-control/managed-objects/%7CMANAGE%7CEMAIL-NOTIFICATIONS%7C/access-definitions
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_APIKEY }}"        
+    body: "{{ lookup('template', './role2/management/rbac_access_add_manage_email_notifications.j2') }}"
+    body_format: json
+    status_code: 201, 204, 400, 401, 409, 415, 500
+    validate_certs: no
+  register: add_user
+  ignore_errors: true

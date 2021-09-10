@@ -1,0 +1,22 @@
+- name: -> Restore VMware virtual machine - Full 
+  uri:
+    url: https://{{ nbu_api_hostname }}:1556/netbackup/recovery/workloads/vmware/scenarios/full-vm/recover
+    method: POST
+    headers:
+      Content-Type: "{{ nbu_api_content_type }}"
+      Authorization: "{{ NBU_API_KEY }}"   
+    body: "{{ lookup('template', 'restore_vm.j2') }}"
+    body_format: json
+    validate_certs: False
+    status_code:
+      - 200
+      - 202
+      - 400
+      - 405
+      - 406
+      - 415
+      - 500
+      - 503
+  register: restore_vm
+  tags:
+    - restore_vmware_vm

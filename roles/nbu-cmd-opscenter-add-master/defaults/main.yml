@@ -1,0 +1,2 @@
+# Master Server Hostname
+master_server: "{{ NBU_MASTER_SERVER }}"

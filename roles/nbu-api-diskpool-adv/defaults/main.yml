@@ -1,0 +1,30 @@
+---
+# defaults file for nbu-api-diskpool-adv
+
+# Master Server Hostname
+master_server: "{{ NBU_MASTER_SERVER }}"
+
+# API - Information
+nbu_api_hostname: "{{ master_server }}"
+nbu_api_port: '1556'
+nbu_api_base_url: "{{ 'https://' + nbu_api_hostname + ':' + nbu_api_port + '/netbackup/' }}"
+nbu_api_content_type: application/vnd.netbackup+json;version=5.0;charset=UTF-8
+
+# Disk Pool - Storage Server
+adv_local_ss_hostname: "{{ inventory_hostname_short }}"
+adv_local_ss_type: ADVANCED_DISK
+adv_local_ss_encryption: false
+
+# Disk Pool - Disk Pool
+adv_local_dp_name: "dp_adv_local_{{ inventory_hostname_short }}"
+adv_local_dp_path: "/adv"
+adv_local_dp_io: 100
+adv_local_dp_id: "AdvancedDisk:{{ inventory_hostname_short }}"
+
+# Storage Unit - Information
+adv_local_stu_name: "stu_adv_local_{{ inventory_hostname_short }}"
+adv_local_stu_mediaservers: "{{ inventory_hostname_short }}"
+adv_local_stu_io: 80
+adv_local_stu_ondemand: true
+adv_local_stu_id: "AdvancedDisk:{{adv_local_dp_name}}"
+

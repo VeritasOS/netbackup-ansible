@@ -1,0 +1,43 @@
+{
+    "data": {
+        "type": "diskVolume",
+        "attributes": {
+            "diskVolumeName": "{{ aws_bucket_volume }}",
+            "encryptionEnabled": "{{ msdp_cloud_dp_encryption }}",
+            "kmsEnabled": "{{ msdp_cloud_dp_kmsenabled }}",
+            "kmsKeyGroupName": "{{ msdp_cloud_dp_kmskeygroup }}",
+            "kmsServerName": "{{ groups['master_servers'][0].split('.') [0] }}",
+            "cloudAttributes": {
+                "providerId": "amazon",
+                "bucketName": "{{aws_bucket_name}}",
+                "subBucketName": "{{aws_bucket_name}}sub",
+                "s3RegionDetails": [
+                    {
+                        "serviceHost": "s3.dualstack.us-east-1.amazonaws.com",
+                        "regionName": "US East (N. Virginia)",
+                        "regionId": "us-east-1"
+                    }
+                ],
+                "urlAccessStyle": "VIRTUAL_STYLE",
+                "curlDetails": {
+                    "curlLoggingEnabled": "True",
+                    "curlTimeOutSeconds": 300,
+                    "curlConnectionTimeOutSeconds": 300
+                },
+                "sslDetails": {
+                    "useSSLMode": "{{ msdp_cloud_dp_ssl_mode }}",
+                    "checkCertificateRevocation": "{{ msdp_cloud_dp_ssl_crl }}",
+                    "httpPort": "{{ msdp_cloud_dp_ssl_http }}",
+                    "httpsPort": "{{ msdp_cloud_dp_ssl_https }}"
+                },
+                "cloudCredentials": {
+                    "authType": "ACCESS_KEY",
+                    "accessKeyDetails": {
+                        "userName": "{{ aws_access_key }}",
+                        "password": "{{ aws_access_secret }}"
+                    }
+                }
+            }
+        }
+    }
+}

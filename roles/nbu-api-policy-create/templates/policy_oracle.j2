@@ -1,0 +1,365 @@
+{
+    "data": {
+        "type": "policy",
+        "id": "{{ nbu_policy_name }}",
+        "attributes": {
+            "policy": {
+                "policyName": "{{ nbu_policy_name }}",
+                "policyType": "Oracle",
+                "policyAttributes": {
+                    "active": true,
+                    "alternateClientHostname": null,
+                    "archivedRedoLogOptions": {
+                        "backupSetSize": 0,
+                        "deleteAfterMakingCopies": 2,
+                        "filesPerBackupSet": 0,
+                        "include": true,
+                        "parallelStreams": 4
+                    },
+                    "autoManagedLabel": null,
+                    "autoManagedType": 0,
+                    "backupFileNameFormatOverrides": {
+                        "archivedRedoLogs": null,
+                        "controlFile": null,
+                        "datafiles": null,
+                        "fastRecoveryArea": null
+                    },
+                    "backupSelectionType": "Whole Database",
+                    "backupSetIdentifier": null,
+                    "blockIncremental": false,
+                    "clientCompress": false,
+                    "clientEncrypt": false,
+                    "clientType": "Protect Instances and Databases",
+                    "dataClassification": null,
+                    "dataGuardOption": "None",
+                    "dataMoverMachine": null,
+                    "databaseBackupShareOptions": {
+                        "deleteBackupCopies": false,
+                        "deleteBackupSets": false,
+                        "deleteProtectedBackupCopiesMinutes": null,
+                        "deleteProtectedBackupSetsMinutes": null
+                    },
+                    "datafileCopyTag": null,
+                    "disableClientSideDeduplication": false,
+                    "effectiveDateUTC": "2021-07-15T08:57:46Z",
+                    "followNFSMounts": false,
+                    "jobLimit": 0,
+                    "keyword": null,
+                    "maximumLimits": {
+                        "backupPiece": 0,
+                        "backupSetSize": 0,
+                        "filesPerBackupSet": 0,
+                        "openFiles": 0,
+                        "readRate": 0,
+                        "sectionSize": 0,
+                        "sectionUnits": null
+                    },
+                    "mediaOwner": "*ANY*",
+                    "offhostBackup": false,
+                    "offlineDatabaseBackup": false,
+                    "parallelStreams": 4,
+                    "priority": 0,
+                    "readOnlyTablespaceOptions": null,
+                    "retainSnapshot": false,
+                    "skipOfflineDatafiles": false,
+                    "snapshotBackup": false,
+                    "snapshotMethod": null,
+                    "snapshotMethodArgs": null,
+                    "storage": "{{ nbu_policy_stu_name }}",
+                    "storageIsSLP": true,
+                    "useAccelerator": false,
+                    "useReplicationDirector": false,
+                    "volumePool": "NetBackup"
+                },
+                "clients": [
+                    {
+                        "databaseName": "$INSTANCE",
+                        "hardware": null,
+                        "hostName": "mh-nbu01-05",
+                        "instanceGroup": null,
+                        "instanceName": "MXH",
+                        "dbid": null,
+                        "dbUniqueName": null,
+                        "OS": null
+                    }
+                ],
+                "schedules": [
+                    {
+                        "acceleratorForcedRescan": false,
+                        "backupCopies": {
+                            "copies": [
+                                {
+                                    "failStrategy": null,
+                                    "mediaOwner": null,
+                                    "retentionLevel": 0,
+                                    "retentionPeriod": {
+                                        "value": 1,
+                                        "unit": "WEEKS"
+                                    },
+                                    "storage": "{{ nbu_policy_stu_name }}",
+                                    "volumePool": null
+                                }
+                            ],
+                            "priority": -1
+                        },
+                        "backupType": "Full Backup",
+                        "excludeDates": {
+                            "lastDayOfMonth": false,
+                            "recurringDaysOfMonth": [],
+                            "recurringDaysOfWeek": [],
+                            "specificDates": []
+                        },
+                        "frequencySeconds": 604800,
+                        "includeDates": {
+                            "lastDayOfMonth": false,
+                            "recurringDaysOfMonth": [],
+                            "recurringDaysOfWeek": [
+                                "1:1",
+                                "1:2",
+                                "1:3",
+                                "1:4",
+                                "1:5",
+                                "1:6",
+                                "2:1",
+                                "2:2",
+                                "2:3",
+                                "2:4",
+                                "2:5",
+                                "2:6",
+                                "3:1",
+                                "3:2",
+                                "3:3",
+                                "3:4",
+                                "3:5",
+                                "3:6",
+                                "4:1",
+                                "4:2",
+                                "4:3",
+                                "4:4",
+                                "4:5",
+                                "4:6",
+                                "5:1",
+                                "5:2",
+                                "5:3",
+                                "5:4",
+                                "5:5",
+                                "5:6"
+                            ],
+                            "specificDates": []
+                        },
+                        "mediaMultiplexing": 1,
+                        "retriesAllowedAfterRunDay": false,
+                        "scheduleName": "FULL_DAILY",
+                        "scheduleType": "Calendar",
+                        "snapshotOnly": false,
+                        "startWindow": [
+                            {
+                                "dayOfWeek": 1,
+                                "startSeconds": 72000,
+                                "durationSeconds": 36000
+                            },
+                            {
+                                "dayOfWeek": 2,
+                                "startSeconds": 72000,
+                                "durationSeconds": 36000
+                            },
+                            {
+                                "dayOfWeek": 3,
+                                "startSeconds": 72000,
+                                "durationSeconds": 36000
+                            },
+                            {
+                                "dayOfWeek": 4,
+                                "startSeconds": 72000,
+                                "durationSeconds": 36000
+                            },
+                            {
+                                "dayOfWeek": 5,
+                                "startSeconds": 72000,
+                                "durationSeconds": 36000
+                            },
+                            {
+                                "dayOfWeek": 6,
+                                "startSeconds": 72000,
+                                "durationSeconds": 36000
+                            },
+                            {
+                                "dayOfWeek": 7,
+                                "startSeconds": 0,
+                                "durationSeconds": 0
+                            }
+                        ],
+                        "storageIsSLP": true,
+                        "syntheticBackup": false
+                    },
+                    {
+                        "acceleratorForcedRescan": false,
+                        "backupCopies": {
+                            "copies": [
+                                {
+                                    "failStrategy": null,
+                                    "mediaOwner": null,
+                                    "retentionLevel": 0,
+                                    "retentionPeriod": {
+                                        "value": 1,
+                                        "unit": "WEEKS"
+                                    },
+                                    "storage": "{{ nbu_policy_stu_name }}",
+                                    "volumePool": null
+                                }
+                            ],
+                            "priority": -1
+                        },
+                        "backupType": "Full Backup",
+                        "excludeDates": {
+                            "lastDayOfMonth": false,
+                            "recurringDaysOfMonth": [],
+                            "recurringDaysOfWeek": [],
+                            "specificDates": []
+                        },
+                        "frequencySeconds": 604800,
+                        "includeDates": {
+                            "lastDayOfMonth": false,
+                            "recurringDaysOfMonth": [],
+                            "recurringDaysOfWeek": [
+                                "1:7"
+                            ],
+                            "specificDates": []
+                        },
+                        "mediaMultiplexing": 1,
+                        "retriesAllowedAfterRunDay": false,
+                        "scheduleName": "FULL_MONTHLY",
+                        "scheduleType": "Calendar",
+                        "snapshotOnly": false,
+                        "startWindow": [
+                            {
+                                "dayOfWeek": 1,
+                                "startSeconds": 0,
+                                "durationSeconds": 0
+                            },
+                            {
+                                "dayOfWeek": 2,
+                                "startSeconds": 0,
+                                "durationSeconds": 0
+                            },
+                            {
+                                "dayOfWeek": 3,
+                                "startSeconds": 0,
+                                "durationSeconds": 0
+                            },
+                            {
+                                "dayOfWeek": 4,
+                                "startSeconds": 0,
+                                "durationSeconds": 0
+                            },
+                            {
+                                "dayOfWeek": 5,
+                                "startSeconds": 0,
+                                "durationSeconds": 0
+                            },
+                            {
+                                "dayOfWeek": 6,
+                                "startSeconds": 0,
+                                "durationSeconds": 0
+                            },
+                            {
+                                "dayOfWeek": 7,
+                                "startSeconds": 72000,
+                                "durationSeconds": 36000
+                            }
+                        ],
+                        "storageIsSLP": true,
+                        "syntheticBackup": false
+                    },
+                    {
+                        "acceleratorForcedRescan": false,
+                        "backupCopies": {
+                            "copies": [
+                                {
+                                    "failStrategy": null,
+                                    "mediaOwner": null,
+                                    "retentionLevel": 0,
+                                    "retentionPeriod": {
+                                        "value": 1,
+                                        "unit": "WEEKS"
+                                    },
+                                    "storage": "{{ nbu_policy_stu_name }}",
+                                    "volumePool": null
+                                }
+                            ],
+                            "priority": -1
+                        },
+                        "backupType": "Full Backup",
+                        "excludeDates": {
+                            "lastDayOfMonth": false,
+                            "recurringDaysOfMonth": [],
+                            "recurringDaysOfWeek": [],
+                            "specificDates": []
+                        },
+                        "frequencySeconds": 604800,
+                        "includeDates": {
+                            "lastDayOfMonth": false,
+                            "recurringDaysOfMonth": [],
+                            "recurringDaysOfWeek": [
+                                "2:7",
+                                "3:7",
+                                "4:7",
+                                "5:7"
+                            ],
+                            "specificDates": []
+                        },
+                        "mediaMultiplexing": 1,
+                        "retriesAllowedAfterRunDay": false,
+                        "scheduleName": "FULL_WEEKLY",
+                        "scheduleType": "Calendar",
+                        "snapshotOnly": false,
+                        "startWindow": [
+                            {
+                                "dayOfWeek": 1,
+                                "startSeconds": 0,
+                                "durationSeconds": 0
+                            },
+                            {
+                                "dayOfWeek": 2,
+                                "startSeconds": 0,
+                                "durationSeconds": 0
+                            },
+                            {
+                                "dayOfWeek": 3,
+                                "startSeconds": 0,
+                                "durationSeconds": 0
+                            },
+                            {
+                                "dayOfWeek": 4,
+                                "startSeconds": 0,
+                                "durationSeconds": 0
+                            },
+                            {
+                                "dayOfWeek": 5,
+                                "startSeconds": 0,
+                                "durationSeconds": 0
+                            },
+                            {
+                                "dayOfWeek": 6,
+                                "startSeconds": 0,
+                                "durationSeconds": 0
+                            },
+                            {
+                                "dayOfWeek": 7,
+                                "startSeconds": 72000,
+                                "durationSeconds": 36000
+                            }
+                        ],
+                        "storageIsSLP": true,
+                        "syntheticBackup": false
+                    }
+                ],
+                "backupSelections": {
+                    "selections": [
+                        "{{ backup_selection }}"
+                    ]
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,212 @@
+# OS - Get information about the services running on the server
+- name: -> Get facts about the installed services
+  ansible.builtin.service_facts:
+
+# OS - Timezone Configuration
+- name: -> Set the local timezone
+  timezone:
+    name: "{{ os_config_timezone }}"
+  ignore_errors: yes
+  tags:
+    - server_os_config
+    - server_os_timezone
+
+# OS - Additional Packages
+
+- name: -> Install additional OS packages required for NetBackup - EPEL
+  yum:
+    name: epel-release
+    state: present
+    update_cache: yes
+    disable_gpg_check: yes
+    skip_broken: yes
+  register: result
+  when: "'media' in ansible_local.netbackup.domain.role"
+  tags:
+    - server_os_config
+    - server_os_packages
+
+- name: -> Install additional OS packages required for NetBackup - Instant Access
+  yum:
+    name: "{{ os_config_packages }}"
+    state: present
+    update_cache: yes
+    disable_gpg_check: yes
+    skip_broken: yes
+  register: result
+  tags:
+    - server_os_config
+    - server_os_packages
+
+- name: -> Install additional OS packages required for NetBackup - RHEL8
+  yum:
+    name: "{{ os_config_packages_rhel8 }}"
+    state: present
+    update_cache: yes
+    disable_gpg_check: yes
+    skip_broken: yes
+  tags:
+    - os_config_media
+    - rhel_packages_install_nbu
+  when:
+    - ansible_distribution_major_version >= '8'
+    - "'media' not in ansible_local.netbackup.domain.role"
+
+- name: -> Install PIP packages required for CloudPoint
+  pip:
+    name: "{{ pip_config_packages }}"
+  register: result_os_config_packages
+  tags:
+    - server_os_config
+    - server_os_packages
+
+# OS - Kernel Tuning - sysctl
+- name: -> Create directory for NetBackup tuned profile
+  file:
+    path: /etc/tuned/netbackup
+    state: directory
+    mode: 744
+  tags:
+    - server_os_config
+    - server_os_tuning
+
+- name: -> Upload tuned OS sysctl parameters for NetBackup
+  copy:
+    src: tuned.conf
+    dest: /etc/tuned/netbackup/tuned.conf
+  tags:
+    - server_os_config
+    - server_os_tuning
+
+- name: -> Determine active tuned profile
+  command: tuned-adm profile
+  register: tuned_adm
+  changed_when: False
+  tags:
+    - server_os_config
+    - server_os_tuning
+
+- name: -> Activate NetBackup tuned profile
+  command: tuned-adm profile netbackup
+  when: "'Current active profile: netbackup' not in tuned_adm.stdout"
+  tags:
+    - server_os_config
+    - server_os_tuning
+
+# OS - Kernel Tuning - pam_limits
+- name: -> Set OS Tuning parameters in "pam_limits"
+  pam_limits:
+    domain: "{{ item.value.domain }}"
+    limit_type: "{{ item.value.type }}"
+    limit_item: "{{ item.value.what }}"
+    value: "{{ item.value.setting }}"
+  with_dict: "{{os_config_pam_limits}}"
+  tags:
+    - server_os_config
+    - server_os_tuning
+
+# OS - Kernel Tuning - ulimit
+- name: -> Set OS Tuning parameters in /etc/profile
+  lineinfile:
+    path   : "{{ os_config_profile_ulimit_file }}"
+    line   : "{{ item }}"
+    state  : present
+  with_items: "{{os_config_profile_ulimit_setting}}"
+  tags:
+    - server_os_config
+    - server_os_tuning
+
+# OS - firewalld
+- name: -> Add NetBackup rules to "firewalld" if service is enabled and running
+  firewalld:
+    zone: public
+    port: "{{ item }}"
+    immediate: true
+    permanent: true
+    state: enabled
+  with_items: "{{ os_config_firewalld }}"
+  notify: restart_firewalld
+  when: "'firewalld.service' in services"
+
+# OS - Configure local hosts file with all NetBackup servers
+- name: -> Add all NetBackup Servers and Clients server to hosts file
+  lineinfile:
+    dest: /etc/hosts
+    regexp: '.*{{ item }}$'
+    line: '{{ hostvars[item].ansible_host }} {{item}} {{item.split(".")[0]}}'
+    state: present
+  when: hostvars[item].ansible_host is defined
+  with_items: "{{ groups.all }}"
+  tags:
+    - server_os_config
+    - server_os_hostsfile
+
+# OS - Add NetBackup software paths to root environment variable
+- name: -> Add NetBackup to root users PATH variable
+  lineinfile:
+    dest: '{{ os_config_profile_root }}'
+    regexp: "{{ item.regexp }}"
+    backrefs: yes
+    line: "{{ item.line }}"
+    create: yes
+  with_items:
+    - { regexp: '^PATH=', line: 'PATH=$PATH:$HOME/bin:/usr/openv/netbackup/bin/admincmd:/usr/openv/netbackup/bin:/usr/openv/netbackup/bin/goodies:/usr/openv/netbackup/bin/support:/usr/openv/volmgr/bin:/usr/openv/java:/netbackup:/opt/sfw/bin:/netbackup/scripts:/opt/VRTSaz/bin/vxazd:/opt/VRTSat/bin/:/opt/VRTSaz/bin/:/opt/vormetric/mseo/server/bin:/opt/vormetric/mseo/agent/bin:/usr/openv/db/bin:/usr/sbin:/sbin:/usr/bin:/opt/VRTS/bin' }             
+  tags:
+    - server_os_config
+    - server_os_path
+
+## Web Services - User / Group
+
+# OS - Configure a new local group for NetBackup Web Services
+- name: -> Add new local group for NetBackup Web Services Group - 'nbwebgrp'
+  group:
+    name: '{{ nbu_webservices_group }}'
+  when: "'master' in ansible_local.netbackup.domain.role"
+  tags:
+    - os_config_master
+    - os_user_webservices
+
+ # OS - Configure a new local group and user for NetBackup Web Services to group
+- name: -> Add new local user and add it to NetBackup Web Services Group - 'nbwebsvc' 
+  user:
+    name: '{{ nbu_webservices_user }}'
+    comment: NetBackup Web Services
+    group: '{{ nbu_webservices_group }}'
+  when: "'master' in ansible_local.netbackup.domain.role"
+  tags:
+    - os_config_master
+    - os_user_webservices
+
+## NBU Services - User / Group
+
+# OS - Configure a new local group for NetBackup Services to run under
+- name: -> Add new local group for NetBackup Services Group - 'nbgrp'
+  group:
+    name: '{{ nbu_services_group }}'
+    state: present
+  when: "'master' in ansible_local.netbackup.domain.role"
+  tags:
+    - os_config_master
+    - os_user_webservices
+
+# OS - Configure netbackup service account 
+- name: -> Create new user for NetBackup Service Account
+  user: 
+    name: '{{ nbu_services_user }}'
+    comment: NetBackup Service Account
+    groups: "{{ nbu_services_group }},{{ nbu_webservices_group }}"
+  when: "'master' in ansible_local.netbackup.domain.role"
+  tags:
+    - os_config_master
+    - os_user_nbu
+
+# OS - Configure netbackup admin user
+- name: -> Create new user for Veritas NetBackup Administrator
+  user: 
+    name: '{{ nbu_admin_user }}'
+    password: "{{ nbu_admin_password | password_hash('sha512') }}"
+    shell: /bin/bash
+    update_password: on_create
+  tags:
+    - os_config_master
+    - os_user_vtasadmin

@@ -1,0 +1,32 @@
+{
+  "data": [
+    {
+      "type": "resource-limits",
+      "id": "vmware",
+      "attributes": {
+      "resources": [
+        {
+            "resourceType": "vCenter",
+            "resourceLimit": "{{ vcenter_limit }}",
+            "additionalData": ""
+        },
+        {
+            "resourceType": "Datastore",
+            "resourceLimit": "{{ datastore_limit }}",
+            "additionalData": ""
+        },
+        {
+            "resourceType": "ESXserver",
+            "resourceLimit": "{{ esxserver_limit }}",
+            "additionalData": ""
+        },
+        {
+            "resourceType": "snapshot",
+            "resourceLimit": "{{ snapshot_limit }}",
+            "additionalData": ""
+        }
+       ]
+      }
+    }
+  ]
+}

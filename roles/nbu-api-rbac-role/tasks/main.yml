@@ -1,0 +1,58 @@
+#### Import Variables ####
+
+# Role 1 - Full Administrator
+
+- include_vars: defaults/role1_admin.yml
+  when: nbu_rbac_role == "Admin"
+
+# Role 2 - Non Administrator
+
+- include_vars: defaults/role2_nonadmin.yml
+  when: nbu_rbac_role == "Non-Admin"
+
+  #### Import Tasks ####
+
+# Role 1 - Full Administrator
+
+# Create RBAC Role
+- import_tasks: ./role1/rbac_add_role.yml
+  when: nbu_rbac_role == "Admin"
+
+# Add Access rights - Management
+- import_tasks: ./role1/rbac_add_access_management.yml
+  when: nbu_rbac_role == "Admin"
+
+# Add Access rights - Protection
+- import_tasks: ./role1/rbac_add_access_protection.yml
+  when: nbu_rbac_role == "Admin"
+
+# Add Access rights - Security
+- import_tasks: ./role1/rbac_add_access_security.yml
+  when: nbu_rbac_role == "Admin"
+
+# Add Access rights - Storage
+- import_tasks: ./role1/rbac_add_access_storage.yml
+  when: nbu_rbac_role == "Admin"
+
+# Role 2 - Non-Administrator
+
+# Create RBAC Role
+- import_tasks: ./role2/rbac_add_role.yml
+  when: nbu_rbac_role == "Non-Admin"
+
+# Add Access rights - Management
+- import_tasks: ./role2/rbac_add_access_management.yml
+  when: nbu_rbac_role == "Non-Admin"
+
+# Add Access rights - Protection
+- import_tasks: ./role2/rbac_add_access_protection.yml
+  when: nbu_rbac_role == "Non-Admin"
+
+# Add Access rights - Security
+- import_tasks: ./role2/rbac_add_access_security.yml
+  when: nbu_rbac_role == "Non-Admin"
+
+# Add Access rights - Storage
+- import_tasks: ./role2/rbac_add_access_storage.yml
+  when: nbu_rbac_role == "Non-Admin"
+

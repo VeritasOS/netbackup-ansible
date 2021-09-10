@@ -1,0 +1,6 @@
+---
+# tasks file for nbu-api-diskpool-adv-local-create
+
+- import_tasks: nbu_api_create_adv_storage_server.yml
+- import_tasks: nbu_api_create_adv_diskpool.yml
+- import_tasks: nbu_api_create_adv_storageunit.yml

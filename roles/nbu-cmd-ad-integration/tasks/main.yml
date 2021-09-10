@@ -1,0 +1,16 @@
+
+- name: -> Check of Active Directory domain is already configured
+  shell: /usr/openv/netbackup/sec/at/bin/vssat listldapdomains | grep '{{ ldap_domain_name }}'
+  ignore_errors: true
+  register: check_ad_domain_exists
+  changed_when: check_ad_domain_exists.rc != 0
+
+
+- name: -> Integrate NetBackup with Active Directory
+  expect:
+    command: /usr/openv/netbackup/sec/at/bin/vssat addldapdomain -d "{{ ldap_domain_name }}" -s "{{ ldap_server_url }}" -u "{{ ldap_user_base_dn }}" -g "{{ ldap_group_base_dn }}" -m "{{ ldap_ad_user_dn }}" -t "{{ ldap_domain_type }}"
+    responses:
+        'Enter password for(.*)': "{{ ldap_ad_user_password }}"
+    timeout: 30
+  when: check_ad_domain_exists.rc == 1
+

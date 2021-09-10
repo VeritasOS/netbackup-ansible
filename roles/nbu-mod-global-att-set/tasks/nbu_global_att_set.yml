@@ -1,0 +1,9 @@
+- name: -> Set Master Server Global Host Properties
+  nbu_globalattributes:
+     maxjobs: '{{ nbu_global_maxjobs }}'
+     jobretry: '{{ nbu_global_jobretry }}'
+     compressdb: '{{ nbu_global_compressdb }}'
+     policyupdate: '{{ nbu_global_policyupdate }}'
+     backupattempts: '{{ nbu_global_backupattempts }}'
+  tags:
+    - nbu_global_att_set

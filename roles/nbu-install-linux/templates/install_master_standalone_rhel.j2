@@ -1,0 +1,36 @@
+#!/bin/expect -f
+#
+set force_conservative 1  ;# set to 1 to force conservative mode even if
+			  ;# script wasn't run conservatively originally
+if {$force_conservative} {
+	set send_slow {1 .1}
+	proc send {ignore arg} {
+		sleep .1
+		exp_send -s -- $arg
+	}
+}
+
+set timeout 600
+spawn $env(SHELL)
+match_max 100000
+send -- "sudo ./install	\r"
+expect -exact "Do you wish to continue? \[y,n\] (y) "
+send -- "y\r"
+expect -exact "Is this host the master server? \[y,n\] (y) "
+send -- "y\r"
+expect -exact "Are you currently performing a disaster recovery of a master server? \[y,n\] (n) "
+send -- "n\r"
+expect -exact "Do you want to install NetBackup and Media Manager files? \[y,n\] (y) "
+send -- "y\r"
+expect -exact "Enter license key: "
+send -- "{{ nbu_license_key }}\r"
+expect -exact "Do you want to add additional license keys now? \[y,n\] (y) "
+send -- "n\r"
+expect -exact "NetBackup server name of this machine? \[y,n\] (y) "
+send -- "n\r"
+expect -exact "Enter the name of this NetBackup server: "
+send -- "{{ inventory_hostname_short }}\r"
+expect -exact "Do you want to add any media servers now? \[y,n\] (n) "
+send -- "n\r"
+expect -exact "Enter the OpsCenter server (default: NONE): "
+send -- "NONE\r"

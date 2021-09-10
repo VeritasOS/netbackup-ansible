@@ -1,0 +1,86 @@
+# OS - Get information about the services running on the server
+- name: -> Get facts about the installed services
+  ansible.builtin.service_facts:
+
+# OS - Timezone Configuration
+- name: -> Set the local timezone
+  timezone:
+    name: "{{ os_config_timezone }}"
+  ignore_errors: yes
+  tags:
+    - server_os_config
+    - server_os_timezone
+
+# OS - Upgrade all packages to the latest
+- name: -> Update OS packages
+  yum:
+    name: '*'
+    state: latest
+
+- name: -> Install additional OS packages required for NetBackup
+  yum:
+    name: "{{ os_config_packages }}"
+    state: present
+    update_cache: yes
+    disable_gpg_check: yes
+    skip_broken: yes
+  register: result_os_config_packages
+  tags:
+    - server_os_config
+    - server_os_packages
+
+- name: -> Install PIP packages required for CloudPoint
+  pip:
+    name: "{{ pip_config_packages }}"
+  register: result_os_config_packages
+  tags:
+    - server_os_config
+    - server_os_packages
+
+# OS - firewalld
+- name: -> Add NetBackup rules to "firewalld" if service is enabled and running
+  firewalld:
+    zone: public
+    port: "{{ item }}"
+    immediate: true
+    permanent: true
+    state: enabled
+  with_items: "{{ os_config_firewalld }}"
+  notify: restart_firewalld
+  when: "'firewalld.service' in services"
+
+## CloudPoint Only
+
+- name: -> Linux OS - Update docker service configuration
+  lineinfile:
+    dest: /usr/lib/systemd/system/podman.service
+    line: "{{ item.line }}"
+    insertafter: 'KillMode=process'
+  ignore_errors: true
+  with_items:
+    - { line: "MountFlags=shared" }
+  register: docker_result
+
+- name: -> Linux OS - Restart the Docker Service after configuration change
+  systemd:
+    name: podman
+    state: restarted
+  when: docker_result.changed == true
+
+- name: -> CloudPoint - Download CloudPoint Docker Image
+  get_url:
+    url: '{{ nbu_cp }}'
+    dest: /tmp/VRTScloudpoint-podman-9.0.1.0.9336.tar.gz
+
+- name: -> CloudPoint - Check if image loaded
+  shell: ( /usr/bin/podman images | grep flexsnap-cloudpoint > /dev/null )
+  register: image_exists
+  ignore_errors: true
+
+- name: -> CloudPoint - Load CloudPoint Docker Image into Repository
+  shell: |
+         cd /tmp
+         tar xvf VRTScloudpoint-podman-9.0.1.0.9336.tar.gz
+         (echo "yes" | /tmp/flexsnap_preinstall.sh)
+  when: image_exists.rc == 1
+

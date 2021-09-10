@@ -1,0 +1,13 @@
+#### VMware Policy ####
+
+# Policy Attributes
+nbu_policy_name: <policy_name>
+nbu_policy_stu_name: <policy_slp>
+
+# Client Information 
+nbu_policy_client_name: MEDIA_SERVER
+nbu_policy_client_os: VMware
+nbu_policy_client_hardware: VMware
+
+# Backup Selections
+nbu_policy_selection: "vmware:/?filter=Displayname Contains 'test-server'"

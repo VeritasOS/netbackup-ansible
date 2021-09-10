@@ -1,0 +1,66 @@
+# Master Server Hostname
+master_server: "{{ ansible_local.netbackup.domain.name }}"
+
+# NBU API Connetion parameters
+nbu_api_port: '1556'
+base_api_url: "{{ 'https://' + master_server + ':' + nbu_api_port + '/netbackup/' }}"
+nbu_content_type: application/vnd.netbackup+json;version=5.0;charset=UTF-8
+
+# Linux OS - Timezone
+os_config_timezone: Europe/London
+
+# Linux OS - PATH
+os_config_profile_root: /root/.bash_profile
+
+# RHEL 8 requires libnsl
+os_config_packages_rhel8:
+  - libnsl
+
+# Linux OS - Kernel Tuning - pam_limits
+os_config_pam_limits:
+   limit1:
+       domain: "*"
+       type: "soft"
+       what: "core"
+       setting: "unlimited"
+   limit2:
+       domain: "*"
+       type: "hard"
+       what: "core"
+       setting: "8192"
+   limit3:
+       domain: "*"
+       type: "soft"
+       what: "nofile"
+       setting: "unlimited"
+   limit4:
+       domain: "*"
+       type: "hard"
+       what: "nofile"
+       setting: "63535"
+
+# Linux OS - Kernel Tuning - ulimit
+os_config_profile_ulimit_setting:
+  - "ulimit -S -c unlimited > /dev/null 2>&1"
+os_config_profile_ulimit_file: /etc/profile
+
+# Hostnames
+nbu_media_fqdn: '{{ inventory_hostname }}'
+nbu_media_short: '{{ inventory_hostname_short }}'
+
+# File
+nbu_config_bpconf: /usr/openv/netbackup/bp.conf
+
+# Software - Information
+nbu_server_software_file: URL for NetBackup server software (e.g. NetBackup_9.1_LinuxR_x86_64.tar.gz) 
+nbu_server_software_dir: /tmp/NetBackup_9.1_LinuxR_x86_64
+
+# Software - RPMs 
+nbu_nbpck: URL for NetBackup RPM files - VRTSnbpck.rpm
+nbu_nbpbx: URL for NetBackup RPM files - VRTSpbx.rpm
+nbu_nbclt: URL for NetBackup RPM files - VRTSnbclt.rpm
+nbu_pddea: URL for NetBackup RPM files - VRTSpddea.rpm
+nbu_pddes: URL for NetBackup RPM files - VRTSpddes.rpm
+nbu_pddei: URL for NetBackup RPM files - VRTSpddei.rpm
+nbu_nbcfg: URL for NetBackup RPM files - VRTSnbcfg.rpm
+nbu_netbp: URL for NetBackup RPM files - VRTSnetbp.rpm

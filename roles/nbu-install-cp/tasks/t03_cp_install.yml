@@ -1,0 +1,17 @@
+- name: -> Check if cloudpoint installation process is already in progress
+  shell: ( podman ps | grep veritas/flexsnap-workflow )
+  register: cp_install
+  ignore_errors: true
+
+- name: Install CloudPoint
+  expect:
+    command: podman run -it --rm --privileged -v /cloudpoint:/cloudpoint -v /run/podman/podman.sock:/run/podman/podman.sock veritas/flexsnap-cloudpoint:9.0.1.0.9336 install
+    responses:
+        'Do you wish to continue CloudPoint installation with older podman version. \? \(y\/n\):': "y"
+        'Admin username:': "{{ cp_admin_user }}"
+        'Admin password:': "{{ cp_admin_password }}"
+        'Confirm Admin password:': "{{ cp_admin_password }}"
+        'Host names for TLS certificate \(space or comma separated\):': "{{ groups['cloudpoint'][0] }}"
+        'Port \(default:443\):': "443"
+    timeout: 600
+  when: cp_install.rc == 1

@@ -1,0 +1,43 @@
+{
+    "data": {
+        "type": "accessDefinition",
+        "attributes": {
+            "propagation": "OBJECT_AND_CHILDREN"
+        },
+        "relationships": {
+            "role": {
+                "data": {
+                    "id": "{{ role_id }}",
+                    "type": "accessControlRole"
+                }
+            },
+            "operations": {
+                "data": [
+                    {
+                        "type": "accessControlOperation",
+                        "id": "|OPERATIONS|MANAGE-ACCESS|"
+                    },
+                    {
+                        "type": "accessControlOperation",
+                        "id": "|OPERATIONS|MANAGE|IMAGES|CHANGE-EXPIRATION|"
+                    },
+                    {
+                        "type": "accessControlOperation",
+                        "id": "|OPERATIONS|MANAGE|IMAGES|VIEW-CONTENTS|"
+                    },
+                    {
+                        "type": "accessControlOperation",
+                        "id": "|OPERATIONS|MANAGE|IMAGES|MANAGE-COPIES|"
+                    },
+                    {
+                        "type": "accessControlOperation",
+                        "id": "|OPERATIONS|VIEW|"
+                    }
+                ]
+            }
+        }
+    }
+}
+
+
+    

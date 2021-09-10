@@ -1,0 +1,30 @@
+{
+    "data": {
+        "type": "slov3",
+        "attributes": {
+            "name": "{{ slo_name }}",
+            "workloadType": "{{ slo_type }}",
+            "allowSubscriptionEdit": true,
+            "description": "Daily Backup",
+            "policyNamePrefix": "{{ slo_prefix }}",
+            "schedules": [
+                {
+                    "scheduleType": "FULL",
+                    "frequencySeconds": 86400,
+                    "retention": {
+                        "value": 7,
+                        "unit": "days"
+                    },
+                    "backupWindows": [
+                        {
+                            "dayOfWeek": 1,
+                            "startSeconds": 0,
+                            "durationSeconds": 86400
+                        }
+                    ],
+                    "backupStorageUnit": "{{ slo_stu }}"
+                }
+            ]
+        }
+    }
+}

@@ -1,0 +1,33 @@
+
+# tasks file for nbu-api-diskpool-msdp-local-create
+
+- import_tasks: msdp_get_token.yml
+
+# MSDP - Local
+
+- import_tasks: msdp_local_storageserver.yml
+  when: nbu_dp_type == "MSDP-Local"
+    
+- import_tasks: msdp_local_diskpool.yml
+  when: nbu_dp_type == "MSDP-Local"
+
+- import_tasks: msdp_local_storageunit.yml
+  when: nbu_dp_type == "MSDP-Local"
+
+
+# MSDP - Cloud - AWS
+
+- import_tasks: msdp_aws_lsu_size.yml
+  when: nbu_dp_type == "MSDP-Cloud-AWS"
+
+- import_tasks: msdp_aws_storageserver.yml
+  when: nbu_dp_type == "MSDP-Cloud-AWS"
+
+- import_tasks: msdp_aws_lsu.yml
+  when: nbu_dp_type == "MSDP-Cloud-AWS"
+
+- import_tasks: msdp_aws_diskpool.yml
+  when: nbu_dp_type == "MSDP-Cloud-AWS"
+
+- import_tasks: msdp_aws_storageunit.yml
+  when: nbu_dp_type == "MSDP-Cloud-AWS"

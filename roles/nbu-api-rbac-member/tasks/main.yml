@@ -1,0 +1,23 @@
+#### Import Variables ####
+
+# Role 1 - Full Administrator
+
+- include_vars: defaults/role1_admin.yml
+  when: nbu_rbac_role == "Admin"
+
+# Role 2 - Administrator
+
+- include_vars: defaults/role2_nonadmin.yml
+  when: nbu_rbac_role == "Non-Admin"
+
+
+#### Import Tasks ####
+
+# Get RBAC role information
+- import_tasks: rbac_get_role.yml
+
+# Add User to Role - AD Group
+- import_tasks: rbac_add_user_ad_group.yml
+  when: 
+   - nbu_member_type == "AD_Group"
+

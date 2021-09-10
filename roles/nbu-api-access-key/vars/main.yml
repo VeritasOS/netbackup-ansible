@@ -1,0 +1,8 @@
+# vars file for nbu-api-access-key-new
+
+# API key - Configuration Information
+user: <username>
+nbdomaintype: e.g. 'unixpwd'
+nbapikeylife: e.g. P1D
+apikeydesc: e.g. "API key for Automation"
+nbdomain: e.g. ''        # Blank if using master server

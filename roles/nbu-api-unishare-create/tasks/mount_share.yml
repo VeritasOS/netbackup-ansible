@@ -1,0 +1,13 @@
+- name: -> Create directory for NetBackup Universal Share
+  file:
+    path: "{{nbu_us_client_mount}}"
+    state: directory
+  delegate_to: "{{ groups['client_linux'][0] }}"
+
+- name: NBU -> Mount Universal Share on Client 
+  mount:
+    path: "{{nbu_us_client_mount}}"
+    src: "{{nbu_us_client_mount_full}}"
+    fstype: nfs
+    state: mounted
+  delegate_to: "{{ groups['client_linux'][0] }}"

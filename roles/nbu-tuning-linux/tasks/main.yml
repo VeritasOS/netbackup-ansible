@@ -1,0 +1,19 @@
+# Load the relevant tasks file for nbu-install-linux
+
+#### Load the relevant variables file for nbu-install-linux ####
+
+- include_vars: defaults/master.yml
+  when: nbu_role == "master"
+
+- include_vars: defaults/media.yml
+  when: nbu_role == "media"
+
+- include_vars: defaults/clients_linux.yml
+  when: nbu_role == "client_linux"
+
+# Run Tasks
+- import_tasks: nbu_tuning_files.yml
+
+
+
+

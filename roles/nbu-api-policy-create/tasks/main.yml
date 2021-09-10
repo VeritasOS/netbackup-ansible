@@ -1,0 +1,38 @@
+---
+# tasks file for nbu-api-policy-create
+
+# Load appropriate Variables
+
+- include_vars: defaults/standard.yml
+  when: "'Standard' in nbu_policy_type"
+
+- include_vars: defaults/vmware.yml
+  when: "'VMware' in nbu_policy_type"
+
+- include_vars: defaults/oracle.yml
+  when: "'Oracle' in nbu_policy_type"
+
+# Run Tasks
+
+environment
+
+# Standard
+- import_tasks: policy_standard.yml
+  when: "'prod' in nbu_policy_type"
+
+- import_tasks: policy_standard.yml
+  when: "'dev' in environmnet"
+
+# VMware
+- import_tasks: policy_vmware.yml
+  when: "'VMware' in nbu_policy_type"
+
+# Oracle
+- import_tasks: register_oracle.yml
+  when: "'Oracle' in nbu_policy_type"
+
+- import_tasks: policy_oracle.yml
+  when: "'Oracle' in nbu_policy_type"
+
+
+

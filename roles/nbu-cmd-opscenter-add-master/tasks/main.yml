@@ -1,0 +1,49 @@
+# Add to bp.conf
+
+- name: -> Add OpsCenter server to bp.conf
+  lineinfile:
+    dest: '/usr/openv/netbackup/bp.conf'
+    regexp: "^OPS_CENTER_SERVER_NAME"
+    line: "OPS_CENTER_SERVER_NAME = {{ opscenter_hostname }}"
+  register: add_opscenter
+  tags:
+    - nbu_master_config
+    - nbu_master_config_authconf
+
+- name: -> Re-readconfig after updating bp.conf
+  shell: /usr/openv/netbackup/bin/admincmd/bprdreq -rereadconfig
+  when: add_opscenter.changed
+
+# Configure secure comms for OpsCenter
+
+- name: -> Check Secure Comms Setting
+  shell: (/usr/openv/netbackup/bin/admincmd/nbseccmd -getsecurityconfig -insecurecommunication -masterserver "{{ master_server }}" | grep on )
+  register: secure_comms
+  tags:
+    - nbu_master_config
+    - nbu_master_config_opscenter
+
+- name: -> Change Secure Comms Setting for OpsCenter
+  shell: |
+         ( echo "{{ master_server }}"; echo "0"; echo unixpwd; echo "{{ nbu_admin_user }}"; echo "{{ nbu_admin_password }}" ) |  /usr/openv/netbackup/bin/bpnbat -login -loginType WEB 
+         /usr/openv/netbackup/bin/admincmd/nbseccmd -setsecurityconfig -insecurecommunication on
+  args:
+    chdir: /usr/openv/netbackup/bin/admincmd
+  when: secure_comms.rc == 1
+  tags:
+    - nbu_master_config
+    - nbu_master_config_opscenter
+
+# Add Master Server to OpsCenter Server
+
+- name: -> Add to OpsCenter
+  shell: |
+         ( /usr/openv/netbackup/bin/admincmd/nbregopsc -add "{{ opscenter_hostname }}"  ) 
+  args:
+    chdir: /usr/openv/netbackup/bin/admincmd
+  when: add_opscenter.changed
+  tags:
+    - nbu_master_config
+    - nbu_master_config_opscenter
+
+

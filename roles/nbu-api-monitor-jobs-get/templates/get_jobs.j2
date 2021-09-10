@@ -1,0 +1,7 @@
+#jinja2: trim_blocks:False
+{%- for item in result2.results -%}
+    {%- for item in item.json.data -%}
+      {{ item.id }}{% if not loop.last %} {% endif %}
+    {%- endfor -%}
+  {% if not loop.last %} {% endif %}
+{%- endfor -%}

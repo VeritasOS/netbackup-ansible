@@ -1,0 +1,25 @@
+{
+    "data": {
+        "type": "storageUnit",
+        "attributes": {
+            "name": "{{ msdp_local_stu_name }}",
+            "useAnyAvailableMediaServer": false,
+            "mediaServerDetails": [
+                {
+                    "name": "{{ msdp_local_stu_mediaservers }}"
+                }
+            ],
+            "maxFragmentSizeMegabytes": "51200",
+            "maxConcurrentJobs": "{{ msdp_local_stu_io }}",
+            "onDemandOnly": "{{ msdp_local_stu_ondemand }}"
+        },
+            "relationships": {
+                "diskPool": {
+                  "data": {
+                    "type": "diskPool",
+                    "id": "{{ msdp_local_stu_id }}"
+                  }
+                }
+            }
+      }
+}

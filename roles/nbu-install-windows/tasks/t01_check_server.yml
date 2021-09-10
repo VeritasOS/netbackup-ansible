@@ -1,0 +1,18 @@
+- name: -> Verify server OS platform
+  assert: 
+    that: "ansible_os_family == 'Windows'"
+    fail_msg: "Incompatible OS - Detected OS is {{ansible_os_family}}"
+    success_msg: "PASS - Operating system platform is compatible -  {{ansible_os_family}}"
+  tags:
+    - server_pre_check
+    - server_pre_check_platform
+
+- name: -> Verify server OS platform is compatible with NetBackup 
+  assert: 
+    that: "ansible_distribution_version is version_compare('10', '>=') "
+    fail_msg: "Incompatible OS Version- Detected OS Version is {{ansible_distribution_version}}"
+    success_msg: "PASS - Operating system platform is compatible -  {{ansible_distribution_version}}"
+  tags:
+    - server_pre_check
+    - server_pre_check_version
+

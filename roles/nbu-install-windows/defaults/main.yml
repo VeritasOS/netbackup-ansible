@@ -1,0 +1,14 @@
+---
+# defaults file for nbu-deploy-client-win
+
+# Master Server Hostname
+master_server: "{{ NBU_MASTER_SERVER }}"
+
+# API - Information
+nbu_api_hostname: "{{ master_server }}"
+nbu_api_port: '1556'
+base_api_url: "{{ 'https://' + master_server + ':' + nbu_api_port + '/netbackup/' }}"
+nbu_content_type: application/vnd.netbackup+json;version=6.0;charset=UTF-8
+
+# Software
+nbu_client_software_win: URL to NetBackup client software (e.g. NetBackup_9.1_Win.zip)

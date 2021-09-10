@@ -1,0 +1,28 @@
+{
+    "data": {
+        "type": "diskPool",
+        "attributes": {
+            "name": "{{ msdp_local_dp_name }}",
+            "diskVolumes": [
+                {
+                    "name": "{{ msdp_local_dp_volume }}"
+                }
+            ],
+            "maximumIoStreams": {
+                "limitIoStreams": true,
+                "streamsPerVolume": "{{ msdp_local_dp_io }}"
+            }
+        },
+        "relationships": {
+            "storageServers": {
+                "data": [
+                    {
+                        "type": "storageServer",
+                        "id": "{{ msdp_local_dp_id }}"
+                    }
+                ]
+            }
+        }
+    }
+} 
+

@@ -1,0 +1,16 @@
+nbu_tuning_files:
+  file1:
+    dest:  /usr/openv/netbackup/NET_BUFFER_SZ
+    setting: 0
+  file2:
+    dest:  /usr/openv/netbackup/NET_BUFFER_SZ_REST
+    setting: 0
+  file3:
+    dest:  /usr/openv/netbackup/db/config/DPS_PROXYDEFAULTSENDTMO
+    setting: 0
+  file4:
+    dest:  /usr/openv/netbackup/db/config/DPS_PROXYDEFAULTRECVTMO
+    setting: 0
+  file5:
+    dest:  /usr/openv/netbackup/db/config/DPS_PROXYNOEXPIRE
+    setting: ""

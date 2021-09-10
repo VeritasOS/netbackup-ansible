@@ -1,0 +1,388 @@
+REM $Id$ 
+REM 
+REM bcpyrght 
+REM ******************************************************************************* 
+REM  $Copyright: Copyright (c) 2020 Veritas Technologies LLC. All rights reserved $ 
+REM ******************************************************************************* 
+REM ecpyrght 
+REM 
+
+@ECHO OFF
+
+REM -------------------------------------------------------------------------------------------
+SET CLIENT=%COMPUTERNAME%
+REM -------------------------------------------------------------------------------------------
+REM  Description: This option specifies the name that NetBackup uses to identify
+REM               this machine. The COMPUTERNAME value lets the local host provide
+REM               the machine name. If this value is used, it may be possible to use
+REM               the same answer file on all machines within a single master server
+REM               domain. The use of IP addresses is not supported.
+REM  Valid input values: %COMPUTERNAME%, <Fully qualified computer name> 
+REM  Default value: N/A
+REM  Required for initial install: Yes
+REM  Required for upgrade: Yes
+
+
+REM -------------------------------------------------------------------------------------------
+SET MASTERSERVER={{ master_server }}
+REM -------------------------------------------------------------------------------------------
+
+REM  Description: This option specifies the server name this machine recognizes as
+REM               the current NetBackup master server.  Additional master servers can be
+REM               specified in the ADDITIONALSERVERS parameter.
+REM               The use of IP addresses is not supported.
+REM  Valid input values: <Fully qualified computer name>
+REM  Default value: N/A
+REM  Required for initial install: Yes
+REM  Required for upgrade: Yes
+
+
+REM -------------------------------------------------------------------------------------------
+SET INSTALLDIR=C:\Program Files\Veritas
+REM -------------------------------------------------------------------------------------------
+
+REM  Description: This option specifies the location to install NetBackup. Only the absolute path
+REM  to a base directory is required for this option.
+REM  Valid input values: <Fully qualified Windows directory path name>
+REM  This parameter can be left empty or commented out if it is not required (see below).
+REM  Default Value: N/A
+REM  Required for initial install: Yes 
+REM  Required for upgrade: No. This option will be ignored.  The install path cannot be
+REM                        changed during an upgrade.
+
+
+REM -------------------------------------------------------------------------------------------
+SET ADDITIONALSERVERS=N/A
+REM -------------------------------------------------------------------------------------------
+REM  Description: Change this line to reflect the names of all additional NetBackup master
+REM  and media servers that communicate with this host. Include NetBackup media servers that
+REM  are used to proxy security requests to the master server. It is sufficient to list only the servers
+REM  that were added after the last installation of this host. The install process will combine the
+REM  old set of servers with the new one.
+REM  Comment this line out if you have no other servers that will be allowed to access this computer.
+REM  The use of IP addresses is not supported.
+REM  Valid input values: <Comma separated list of fully qualified computer names>
+REM  This parameter can be left empty or commented out if it is not required (see below).
+REM  This parameter can be left empty.
+REM  Default Value: N/A
+REM  Required for initial install: No. Additional master servers or media servers that are proxys
+REM  to this client must be configured. That can be done here but can also be done later instead.
+REM  Required for upgrade: No. Master servers or media servers that are proxys to the client which
+REM  were added after the initial install must be configured. That can be done here but can
+REM  also be done later instead.
+
+
+REM -------------------------------------------------------------------------------------------
+SET SERVICESTARTTYPE=Automatic
+REM -------------------------------------------------------------------------------------------
+REM  Description: This option specifies whether NetBackup services will be restarted after the
+REM               host server reboots.
+REM  Valid input values: Automatic - Services will be restarted immediately after reboot
+REM                      Manual    - Services will be restarted when needed by NetBackup applications
+REM  This parameter can be left empty or commented out.
+REM  Default Value: Automatic
+REM  Required for initial install: No
+REM  Required for upgrade: No
+
+
+REM -------------------------------------------------------------------------------------------
+SET VNETD_PORT=13724
+REM -------------------------------------------------------------------------------------------
+REM  Description: NetBackup VNETD Port Number
+REM  Valid input values: <Valid Port number>
+REM  This parameter can be left empty or commented out.
+REM  Default Value: 13724
+REM  Required for initial install: No
+REM  Required for upgrade: No
+
+
+REM -------------------------------------------------------------------------------------------
+SET STOP_NBU_PROCESSES=0
+REM -------------------------------------------------------------------------------------------
+REM  Description: This option specifies whether the install process will stop any running NetBackup
+REM               processes automatically if detected.
+REM  WARNING:     Please make sure no NetBackup jobs are active 
+REM  Valid input values: 0 (= Don't stop), 1 (= Stop).
+REM  This parameter can be left empty or commented out.
+REM  Default Value: 0
+REM  Required for initial install: N/A
+REM  Required for upgrade: No
+
+
+REM -------------------------------------------------------------------------------------------
+SET ABORT_REBOOT_INSTALL=0
+REM -------------------------------------------------------------------------------------------
+REM  Decription: Abort install if reboot is required.
+REM  Valid input values: 0 (= Don't abort), 1 (= Abort).
+REM  This parameter can be left empty or commented out.
+REM  Default Value: 0
+REM  Required for initial install: No
+REM  Required for upgrade: No
+
+
+REM -------------------------------------------------------------------------------------------
+SET ACCEPT_REVERSE_CONNECTION=FALSE
+REM -------------------------------------------------------------------------------------------
+REM  Description: This option specifies that NetBackup may use the reverse connection in case
+REM               of a Dynamic Network Address Translation (DNAT) environment.
+REM  Warning:     You must not set the ACCEPT_REVERSE_CONNECTION configuration option to TRUE in
+REM               the following scenarios:
+REM               . If you do not have a Dynamic network address translation (DNAT) setup.
+REM               . If NetBackup clients are not behind a firewall.
+REM  Valid input values: FALSE (=don't accept), TRUE (=accept)
+REM  This parameter can be left empty or commented out if it is not required (see below).
+REM  Default Value: FALSE
+REM  Required for initial install: Only when installing in a DNAT environment.
+REM  Required for upgrade: Only when upgrading in a DNAT environment.
+
+
+REM Security configuration: If this is an initial installation or an upgrade from pre-NetBackup
+REM                       8.0, at least one set of security configuration parameters (NBCA or
+REM                       ECA) must be provided.
+REM
+REM                       If the master server is using a NetBackup certificate authority (NBCA)
+REM                       only, this host must also use NBCA. In this case the
+REM                       CA_CERTIFICATE_FINGERPRINT of the master server must be provided.
+REM                       An AUTHORIZATION_TOKEN may also be required depending on the
+REM                       security level configured on the master server or whether this
+REM                       machine is already configured on the master.  For more information
+REM                       refer to:
+REM                       https://www.veritas.com/support/en_US/article.000127129.
+REM
+REM                       If the master server is using an external certificate authority (ECA),
+REM                       or if the master server is using both NBCA and ECA, values must be
+REM                       provided for either the ECA options for a certificate from a file
+REM                       or the ECA options for a certificate from a Windows Certificate Store
+REM                       (see further below). If you are not configuring ECA as part of this
+REM                       installation then set those options to SKIP.
+REM                       For more information, refer to:
+REM                       https://www.veritas.com/support/en_US/article.100044300.
+REM
+REM                       If this is an initial install or an upgrade from NetBackup 8.0
+REM                       or later, security may already be set correctly.  If the master
+REM                       server is using only NBCA or only ECA, and the client is
+REM                       already configured to use those methods, the security options
+REM                       are not required and will be ignored if provided.  If the master
+REM                       server is using ECA and the client is not, ECA options
+REM                       must be provided.
+REM
+REM The CA_CERTIFICATE_FINGERPRINT and AUTHORIZATION_TOKEN below are for use when configuring a
+REM NetBackup certificate. These values are mutually exclusive with the values to configure an
+REM external certificate, prefixed with ECA_.
+
+
+REM -------------------------------------------------------------------------------------------
+SET CA_CERTIFICATE_FINGERPRINT={{ master_ca_cert }}
+REM -------------------------------------------------------------------------------------------
+REM  Description: This option specifies the Certificate Authority (CA) Certificate Fingerprint
+REM               of the current NetBackup master server.
+REM               The Certificate Fingerprint is retrieved from the CA during installation or
+REM               upgrade. The fingerprint format is 59 characters and is a combination of the
+REM               digits 0-9, the letters A-F, and colons (e.g.
+REM               01:23:45:67:89:AB:CD:EF:01:23:45:67:89:AB:CD:EF:01:23:45:67). The fingerprint
+REM               value must match the fingerprint for the server value that is specified in
+REM               the first SERVER=server_name option. Set this to SKIP to continue the
+REM               installation or upgrade without configuring the host to use a NetBackup
+REM               certificate authority.
+REM  Valid values: <59 character fingerprint code>, SKIP
+REM  This parameter can be left empty or commented out if it is not required (see below).
+REM  Default Value: N/A
+REM  Required for initial install: See Security configuration note above.
+REM  Required for upgrade: See Security configuration note above.
+
+
+REM -------------------------------------------------------------------------------------------
+SET AUTHORIZATION_TOKEN={{ auth_token }}
+REM -------------------------------------------------------------------------------------------
+REM  Description: This option specifies that NetBackup should use an authorization or a
+REM               reissue token when retrieving the host certificate. The AUTHORIZATION_TOKEN
+REM               is 16 upper case letters. Some environments require an authorization token
+REM               for backups and restores to work correctly. If this information is required
+REM               and is not provided in the answer file, the installation will fail. If SKIP
+REM               is specified, the installer attempts to retrieve a host certificate without
+REM               including a token. In some environments this may result in additional manual
+REM               steps following the installation.
+REM WARNING:      Because providing the authorization token in plain text presents a security
+REM               risk, restrict access to the silentclient.cmd file to read access. Grant read
+REM               access to NetBackup administrators and system administrators only. Delete the
+REM               silentclient.cmd file following successful installation.
+REM  Valid input values: <Authorization token>, <Reissue token>, SKIP
+REM  This parameter can be left empty or commented out if it is not required (see below).
+REM  This parameter can be left empty.
+REM  Default Value: N/A
+REM  Required for initial install: See description
+REM  Required for upgrade: See description
+
+
+REM The following values prefixed with ECA_ are for use when configuring an external
+REM certificate. These values are mutually exclusive with CA_CERTIFICATE_FINGERPRINT and
+REM AUTHORIZATION_TOKEN.
+
+REM If configuration of an external CA certificate is required but you prefer to manually
+REM perform this configuration following installation, change all ECA fields to have
+REM values of SKIP.
+
+REM If configuring a certificate from the Windows certificate store, populate only the
+REM following ECA fields, leaving all others empty:
+REM ECA_CERT_STORE
+REM ECA_CRL_CHECK_LEVEL
+REM ECA_CRL_PATH (optional)
+
+REM If configuring a certificate from a file, populate only the following ECA fields,
+REM leaving all others empty:
+REM ECA_CERT_PATH
+REM ECA_TRUST_STORE_PATH
+REM ECA_PRIVATE_KEY_PATH
+REM ECA_KEY_PASSPHRASEFILE (optional)
+REM ECA_CRL_CHECK_LEVEL
+REM ECA_CRL_PATH (optional)
+
+
+REM -------------------------------------------------------------------------------------------
+REM SET ECA_CERT_STORE=SKIP
+REM -------------------------------------------------------------------------------------------
+REM  Description: This option specifies the external certificate location in a Windows certificate
+REM               store. To set up an external certificate from the Windows certificate store this is
+REM               required.
+REM               Set this and all other ECA properties to SKIP to continue installation or upgrade
+REM               without configuring the host to use an external certificate authority.
+REM  Valid input values: <Windows certificate store path in the format <store name>\<issuer DN>\<subject>>,
+REM              SKIP
+REM  This parameter can be left empty or commented out if it is not required (see below).
+REM  Default Value: N/A
+REM  Required for initial install: See Security configuration note above.
+REM  Required for upgrade: See Security configuration note above.
+
+
+REM -------------------------------------------------------------------------------------------
+REM ECA_CERT_PATH=SKIP
+REM -------------------------------------------------------------------------------------------
+REM  Description: This option specifies the path and the file name of the external certificate
+REM               file. If you are using an external certificate from a file this is required.
+REM               Set this and all other ECA properties to SKIP to continue installation or
+REM               upgrade without configuring the host to use an external certificate authority.
+REM  Valid input values: <Complete path and file name>, SKIP
+REM  This parameter can be left empty or commented out if it is not required (see below).
+REM  Default Value: N/A
+REM  Required for initial install: See Security configuration note above.
+REM  Required for upgrade: See Security configuration note above.
+
+
+REM -------------------------------------------------------------------------------------------
+REM ECA_TRUST_STORE_PATH=SKIP
+REM -------------------------------------------------------------------------------------------
+REM  Description: This option specifies the path and the file name of the file representing the
+REM               trust store location. If you are using an external certificate from a file
+REM               this is required.
+REM               Set this and all other ECA properties to SKIP to continue installation or upgrade
+REM               without configuring the host to use an external certificate authority.
+REM  Valid input values: <Complete path and file name>, SKIP
+REM  This parameter can be left empty or commented out if it is not required (see below).
+REM  Default Value: N/A
+REM  Required for initial install: See Security configuration note above.
+REM  Required for upgrade: See Security configuration note above.
+
+
+REM -------------------------------------------------------------------------------------------
+REM ECA_PRIVATE_KEY_PATH=SKIP
+REM -------------------------------------------------------------------------------------------
+REM  Description: This option specifies the path and the file name of the file representing the
+REM               private key. If you are using an external certificate from a file this is required.
+REM               Set this and all other ECA properties to SKIP to continue installation
+REM               or upgrade without configuring the host to use an external certificate
+REM               authority.
+REM  Valid input values: <Complete path and file name>, SKIP
+REM  This parameter can be left empty or commented out if it is not required (see below).
+REM  Default Value: N/A
+REM  Required for initial install: See Security configuration note above.
+REM  Required for upgrade: See Security configuration note above.
+
+
+REM -------------------------------------------------------------------------------------------
+REM ECA_CRL_CHECK_LEVEL=SKIP
+REM -------------------------------------------------------------------------------------------
+REM  Description: This option specifies the CRL mode.
+REM  Valid input values :
+REM               USE_CDP: Use the CRL defined in the certificate.
+REM               USE_PATH: Use the CRL at the path that is specified in ECA_CRL_PATH.
+REM               DISABLED: Do not use a CRL.
+REM               SKIP: Set this and all other ECA properties to SKIP to continue installation or
+REM               upgrade without configuring the host to use an external certificate authority.
+REM  This parameter can be left empty or commented out if it is not required (see below).
+REM  Default Value: N/A
+REM  Required for initial install: See Security configuration note above.
+REM  Required for upgrade: See Security configuration note above.
+
+
+REM -------------------------------------------------------------------------------------------
+REM SET ECA_CRL_PATH=SKIP
+REM -------------------------------------------------------------------------------------------
+REM  Description: This option specifies the complete path name of the CRL associated with
+REM               the external CA certificate. Set this and all other ECA properties to SKIP to
+REM               continue installation or upgrade without configuring the host to use an
+REM               external certificate authority.
+REM  Valid input values: <Complete path name>, SKIP
+REM  This parameter can be left empty or commented out if it is not required (see below).
+REM  Default Value: N/A
+REM  Required for initial install: Only when ECA_CRL_CHECK_LEVEL=USE_PATH
+REM  Required for upgrade: Only when ECA_CRL_CHECK_LEVEL=USE_PATH
+
+
+REM -------------------------------------------------------------------------------------------
+REM SET ECA_KEY_PASSPHRASEFILE=SKIP
+REM -------------------------------------------------------------------------------------------
+REM  Description: This option specifies the path and the file name of the file that contains
+REM               the passphrase to access the keystore. Set this and all other ECA properties to
+REM               SKIP to continue installation or upgrade without configuring the host to use
+REM               an external certificate authority.
+REM  Valid input values: <Complete path and file name>, SKIP
+REM  This parameter can be left empty or commented out if it is not required (see below).
+REM  Default Value: N/A
+REM  Required for initial install: See Security configuration note above.
+REM  Required for upgrade: See Security configuration note above.
+
+
+
+REM -------------------------------------------------------------------------------------------
+REM Do not change anything after this line
+REM Install logs will be saved to %ALLUSERSPROFILE%\Veritas\NetBackup\InstallLogs
+REM -------------------------------------------------------------------------------------------
+
+SET RESPFILENAME=%TEMP%\%COMPUTERNAME%_silentclient.resp
+
+IF EXIST %RESPFILENAME% del %RESPFILENAME%
+
+@ECHO INSTALLDIR:%INSTALLDIR%>> %RESPFILENAME%
+@ECHO MASTERSERVERNAME:%MASTERSERVER%>> %RESPFILENAME%
+@ECHO FINGERPRINT:%CA_CERTIFICATE_FINGERPRINT%>> %RESPFILENAME%
+@ECHO ADDITIONALSERVERS:%ADDITIONALSERVERS%>> %RESPFILENAME%
+@ECHO NETBACKUPCLIENTINSTALL:1>> %RESPFILENAME%
+@ECHO SERVERS:%MASTERSERVER%,%ADDITIONALSERVERS%>> %RESPFILENAME%
+@ECHO CLIENTNAME:%CLIENT%>> %RESPFILENAME%
+@ECHO NBSTARTTRACKER:%STARTTRACKER%>> %RESPFILENAME%
+@ECHO STARTUP:%SERVICESTARTTYPE%>> %RESPFILENAME%
+@ECHO VNETD_PORT:%VNETD_PORT%>> %RESPFILENAME%
+@ECHO CLIENTSLAVENAME:%CLIENT%>> %RESPFILENAME%
+@ECHO SILENTINSTALL:1>> %RESPFILENAME%
+@ECHO ISPUSHINSTALL:1>> %RESPFILENAME%
+@ECHO ISCUSTOMINSTALL:1>> %RESPFILENAME%
+@ECHO REBOOT:ReallySuppress>> %RESPFILENAME%
+@ECHO NUMERICINSTALLTYPE:1>> %RESPFILENAME%
+@ECHO STOP_NBU_PROCESSES:%STOP_NBU_PROCESSES%>> %RESPFILENAME%
+@ECHO ABORT_REBOOT_INSTALL:%ABORT_REBOOT_INSTALL%>> %RESPFILENAME%
+@ECHO PBXCONFIGURECS:FALSE>> %RESPFILENAME%
+@ECHO ECA_CERT_STORE:%ECA_CERT_STORE%>> %RESPFILENAME%
+@ECHO ECA_CERT_PATH:%ECA_CERT_PATH%>> %RESPFILENAME%
+@ECHO ECA_TRUST_STORE_PATH:%ECA_TRUST_STORE_PATH%>> %RESPFILENAME%
+@ECHO ECA_PRIVATE_KEY_PATH:%ECA_PRIVATE_KEY_PATH%>> %RESPFILENAME%
+@ECHO ECA_CRL_CHECK_LEVEL:%ECA_CRL_CHECK_LEVEL%>> %RESPFILENAME%
+@ECHO ECA_CRL_PATH:%ECA_CRL_PATH%>> %RESPFILENAME%
+@ECHO ECA_KEY_PASSPHRASEFILE:%ECA_KEY_PASSPHRASEFILE%>> %RESPFILENAME%
+@ECHO ACCEPT_REVERSE_CONNECTION:%ACCEPT_REVERSE_CONNECTION%>> %RESPFILENAME%
+
+C:\Temp\NetBackup_9.1_Win\x64\setup.exe /CLIENT -s /REALLYLOCAL /RESPFILE:'%RESPFILENAME%'
+SET MSIEXEC_STATUS=%ERRORLEVEL%
+
+IF EXIST %RESPFILENAME% del %RESPFILENAME%
+
+exit /B %MSIEXEC_STATUS%

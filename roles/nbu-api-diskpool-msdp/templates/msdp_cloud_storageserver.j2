@@ -1,0 +1,32 @@
+{
+    "data": {
+        "type": "cloudBucket",
+        "attributes": {
+            "cloudBucketName": "{{aws_bucket_name}}",
+            "cloudAttributes": {
+                "providerId": "amazon",
+                "urlAccessStyle": "VIRTUAL_STYLE",
+                "s3RegionDetails": [
+                    {
+                        "serviceHost": "s3.dualstack.us-east-1.amazonaws.com",
+                        "regionName": "US East (N. Virginia)",
+                        "regionId": "us-east-1"
+                    }
+                ],
+                "sslDetails": {
+                    "useSSLMode": "{{ msdp_cloud_ss_ssl_mode }}",
+                    "checkCertificateRevocation": "{{ msdp_cloud_ss_ssl_crl }}",
+                    "httpPort": "{{ msdp_cloud_ss_ssl_http }}",
+                    "httpsPort": "{{ msdp_cloud_ss_ssl_https }}"
+                },
+                "cloudCredentials": {
+                    "authType": "ACCESS_KEY",
+                    "accessKeyDetails": {
+                        "userName": "{{ aws_access_key }}",
+                        "password": "{{ aws_access_secret }}"
+                    }
+                }
+            }
+        }
+    }
+}
